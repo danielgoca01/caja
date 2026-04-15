@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>CajaCasa</title>
   <!-- PWA / Pantalla de inicio -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -53,14 +53,14 @@
     }
 
     html, body {
-      min-height: 100%;
+      width: 100%; min-height: 100%;
       font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
     }
 
-    #app { max-width: 430px; margin: 0 auto; min-height: 100vh; padding-bottom: 120px; }
+    #app { width: 100%; max-width: 430px; margin: 0 auto; min-height: 100vh; padding-bottom: 120px; }
 
     /* ─── LOADING ─────────────────────────────── */
     #loadingScreen {
