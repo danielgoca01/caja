@@ -125,7 +125,7 @@
     .header {
       position: sticky; top: 0; z-index: 50;
       background: var(--bg);
-      padding: 20px 22px 14px;
+      padding: 22px 16px 16px;
       display: flex; align-items: center; justify-content: space-between;
     }
     .header-left { display: flex; align-items: center; gap: 10px; }
@@ -153,9 +153,9 @@
 
     /* ─── HERO ────────────────────────────────── */
     .hero {
-      margin: 4px 16px 0;
+      margin: 4px 10px 0;
       background: linear-gradient(140deg, #C4AAFF 0%, #A882F5 40%, #9068E8 100%);
-      border-radius: var(--radius); padding: 26px 24px 22px;
+      border-radius: var(--radius); padding: 30px 24px 26px;
       position: relative; overflow: hidden;
       box-shadow: 0 12px 40px rgba(124,92,232,0.30);
     }
@@ -171,22 +171,22 @@
     }
     .hero-label { font-size:10px; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.70); margin-bottom:8px; }
     .hero-balance {
-      font-family:'Outfit',-apple-system,sans-serif; font-size:42px; font-weight:800;
+      font-family:'Outfit',-apple-system,sans-serif; font-size:48px; font-weight:800;
       color:#FFF; line-height:1; letter-spacing:-1.5px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.10);
     }
-    .hero-balance .cur { font-size:24px; font-weight:600; opacity:.80; margin-right:1px; }
+    .hero-balance .cur { font-size:28px; font-weight:600; opacity:.80; margin-right:1px; }
     .hero-row { display:flex; align-items:center; justify-content:space-between; margin-top:18px; }
     .hero-month { font-size:12px; font-weight:700; color:rgba(255,255,255,0.75); display:flex; align-items:center; gap:6px; }
     .hero-month-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.60); }
     .hero-avatars { display:flex; }
 
     /* ─── STATS ───────────────────────────────── */
-    .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 16px 0; }
-    .stat-card { background:var(--surface); border-radius:var(--radius-sm); padding:16px; border:1.5px solid var(--border); box-shadow:var(--shadow-sm); }
+    .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 10px 0; }
+    .stat-card { background:var(--surface); border-radius:var(--radius-sm); padding:18px; border:1.5px solid var(--border); box-shadow:var(--shadow-sm); }
     .stat-label { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text-3); display:flex; align-items:center; gap:5px; margin-bottom:8px; }
     .stat-dot { width:7px; height:7px; border-radius:50%; }
-    .stat-value { font-family:'Outfit',-apple-system,sans-serif; font-size:19px; font-weight:700; letter-spacing:-0.5px; }
+    .stat-value { font-family:'Outfit',-apple-system,sans-serif; font-size:22px; font-weight:700; letter-spacing:-0.5px; }
     .stat-value.g { color: var(--green-text); }
     .stat-value.r { color: var(--red-text); }
 
@@ -203,7 +203,7 @@
     .empty-text { font-size:14px; font-weight:600; color:var(--text-3); line-height:1.6; }
 
     /* ─── DATE GROUP ──────────────────────────── */
-    .date-group { margin:0 16px 4px; }
+    .date-group { margin:0 10px 4px; }
     .date-label { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-3); padding:8px 4px; }
 
     /* ─── SWIPE TO DELETE ────────────────────── */
@@ -226,13 +226,13 @@
       will-change:transform;
     }
     .tx-item:hover { background:var(--card-hover); box-shadow:var(--shadow); }
-    .tx-icon { width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:21px; flex-shrink:0; }
+    .tx-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:23px; flex-shrink:0; }
     .tx-icon.egreso  { background:var(--red-light); }
     .tx-icon.ingreso { background:var(--green-light); }
     .tx-info { flex:1; min-width:0; }
-    .tx-name { font-size:14px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .tx-meta { font-size:11px; font-weight:600; color:var(--text-2); display:flex; align-items:center; gap:6px; margin-top:3px; }
-    .tx-amount { font-family:'Outfit',-apple-system,sans-serif; font-size:15px; font-weight:800; white-space:nowrap; }
+    .tx-name { font-size:15px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .tx-meta { font-size:12px; font-weight:600; color:var(--text-2); display:flex; align-items:center; gap:6px; margin-top:3px; }
+    .tx-amount { font-family:'Outfit',-apple-system,sans-serif; font-size:17px; font-weight:800; white-space:nowrap; }
     .tx-amount.egreso  { color:var(--red-text); }
     .tx-amount.ingreso { color:var(--green-text); }
 
