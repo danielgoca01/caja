@@ -60,7 +60,7 @@
       overflow-x: hidden;
     }
 
-    #app { width: 100%; max-width: 430px; margin: 0 auto; min-height: 100vh; padding-bottom: 120px; }
+    #app { width: 100%; max-width: 430px; margin: 0 auto; min-height: 100vh; padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
 
     /* ─── LOADING ─────────────────────────────── */
     #loadingScreen {
@@ -125,7 +125,7 @@
     .header {
       position: sticky; top: 0; z-index: 50;
       background: var(--bg);
-      padding: 22px 16px 16px;
+      padding: calc(env(safe-area-inset-top, 20px) + 14px) 16px 16px;
       display: flex; align-items: center; justify-content: space-between;
     }
     .header-left { display: flex; align-items: center; gap: 10px; }
@@ -238,7 +238,7 @@
 
     /* ─── FAB ─────────────────────────────────── */
     .fab {
-      position:fixed; bottom:26px; left:50%; transform:translateX(-50%);
+      position:fixed; bottom:calc(env(safe-area-inset-bottom, 0px) + 26px); left:50%; transform:translateX(-50%);
       width:66px; height:66px; border-radius:50%; border:none; color:white;
       font-size:30px; display:flex; align-items:center; justify-content:center;
       cursor:pointer; z-index:40;
