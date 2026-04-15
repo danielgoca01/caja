@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CAJA · Daniel & Thalía</title>
+  <title>CajaCasa</title>
   <!-- PWA / Pantalla de inicio -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="CAJA">
+  <meta name="apple-mobile-web-app-title" content="CajaCasa">
   <meta name="theme-color" content="#9068E8">
   <link rel="apple-touch-icon" id="appIcon" sizes="512x512" href="https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_0.jpg">
   <link rel="manifest" href="manifest.json">
@@ -538,7 +538,11 @@
         <button onclick="cycleIcon()" style="background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;color:var(--text-2);font-family:inherit;font-size:13px;font-weight:800;padding:9px 0;cursor:pointer;width:100%">Cambiar foto</button>
       </div>
     </div>
-    <div id="iconInstructions" style="margin-top:4px;background:rgba(155,128,240,0.09);border-radius:10px;padding:10px 12px;font-size:11px;color:var(--text-3);font-weight:600;line-height:1.8"></div>
+    <div style="margin-top:4px;background:rgba(155,128,240,0.09);border-radius:10px;padding:10px 12px;font-size:11px;color:var(--text-3);font-weight:600;line-height:1.8">
+      1. Elegí la foto de arriba<br>
+      2. Eliminá la app del inicio (si está)<br>
+      3. Compartir (□↑) → Añadir a pantalla de inicio
+    </div>
   </div>
   <div style="height:16px"></div>
 </div>
@@ -595,22 +599,11 @@ function initAppIcon(){
   if(l) l.href=ICON_URLS[idx]||ICON_URLS[0];
   _syncIconPreview(idx);
 }
-var BASE_URL='https://script.google.com/macros/s/AKfycbzcWsbi1R0B6hwXyWD5Y9gWTVBTUSf1oJi3hiSsrO-tHDQoxJJV_W3ljRMRSyK_qIpqzA/exec';
 function _syncIconPreview(idx){
   var p=document.getElementById('iconPreview');
   var lb=document.getElementById('iconLabel');
-  var info=document.getElementById('iconInstructions');
   if(p) p.src=ICON_PHOTOS[idx]||ICON_PHOTOS[0];
   if(lb) lb.textContent='Foto '+(idx+1)+' de '+ICON_URLS.length;
-  if(info){
-    var url=BASE_URL+(idx===1?'?i=1':'');
-    info.innerHTML=
-      '<b style="color:var(--text-2)">Para anclar con esta foto:</b><br>'+
-      '1. Eliminá la app del inicio (si está)<br>'+
-      '2. En Safari abrí este link:<br>'+
-      '<span style="color:var(--purple-mid);word-break:break-all;font-size:10px">'+url+'</span><br>'+
-      '3. Compartir (□↑) → Añadir a pantalla de inicio';
-  }
 }
 function cycleIcon(){
   var idx=(parseInt(localStorage.getItem('cajaIconIdx')||'0',10)+1)%ICON_URLS.length;
@@ -619,29 +612,6 @@ function cycleIcon(){
   if(l) l.href=ICON_URLS[idx];
   _syncIconPreview(idx);
   toast('Foto '+(idx+1)+' seleccionada');
-}
-function showIconForHomeScreen(){
-  closeAll();
-  var idx=parseInt(localStorage.getItem('cajaIconIdx')||'0',10);
-  var ov=document.createElement('div');
-  ov.id='iconScreenDiv';
-  ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:#000;';
-  var img=document.createElement('img');
-  img.src=ICON_PHOTOS[idx]||ICON_PHOTOS[0];
-  img.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;';
-  var ui=document.createElement('div');
-  ui.style.cssText='position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.82));padding:28px 24px 52px;text-align:center;color:#fff;font-family:Nunito,sans-serif;';
-  ui.innerHTML=
-    '<div style="font-size:20px;font-weight:800;margin-bottom:6px">¡Listo!</div>'+
-    '<div style="font-size:14px;opacity:0.82;margin-bottom:22px">Tocá <b>Compartir</b> (□↑) → <b>Añadir a pantalla de inicio</b></div>'+
-    '<button onclick="cancelIconScreen()" style="background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.45);color:#fff;padding:12px 28px;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700">Cancelar</button>';
-  ov.appendChild(img);
-  ov.appendChild(ui);
-  document.body.appendChild(ov);
-}
-function cancelIconScreen(){
-  var ov=document.getElementById('iconScreenDiv');
-  if(ov) ov.remove();
 }
 
 /* ══════════════════════════════════════════════════════
@@ -934,15 +904,14 @@ var ANIMS_E = [
 ];
 
 /* ══════════════════════════════════════════════════════
-   API  (fetch → GAS JSON endpoint)
+   API  (fetch GET → GAS JSON endpoint)
 ══════════════════════════════════════════════════════ */
 var GAS_API='https://script.google.com/macros/s/AKfycbzcWsbi1R0B6hwXyWD5Y9gWTVBTUSf1oJi3hiSsrO-tHDQoxJJV_W3ljRMRSyK_qIpqzA/exec';
 
-function apiGet(action){
-  return fetch(GAS_API+'?action='+action).then(function(r){return r.json();});
-}
-function apiPost(data){
-  return fetch(GAS_API,{method:'POST',body:JSON.stringify(data)}).then(function(r){return r.json();});
+function api(action,data){
+  var url=GAS_API+'?action='+encodeURIComponent(action);
+  if(data) url+='&data='+encodeURIComponent(JSON.stringify(data));
+  return fetch(url).then(function(r){return r.json();});
 }
 
 /* ══════════════════════════════════════════════════════
@@ -954,7 +923,7 @@ function setSyncState(s){
 
 function loadFromServer(){
   setSyncState('syncing');
-  apiGet('getAllData')
+  api('getAllData')
     .then(function(data){
       S.transactions=data.transactions||[];
       S.initialBalance=data.config.initialBalance;
@@ -966,7 +935,7 @@ function loadFromServer(){
 }
 
 function silentRefresh(){
-  apiGet('getAllData')
+  api('getAllData')
     .then(function(data){
       S.transactions=data.transactions||[];
       S.initialBalance=data.config.initialBalance;
@@ -1078,7 +1047,7 @@ function saveTx(){
   triggerAnimation(tx.type);  // 🎉 ANIMACIÓN
   toast(tx.type==='ingreso'?'✅ Ingreso guardado':'✅ Egreso guardado');
   setSyncState('syncing');
-  apiPost({action:'addTransaction',tx:tx})
+  api('addTransaction',{tx:tx})
     .then(function(){ setSyncState(''); })
     .catch(function(){
       S.transactions=S.transactions.filter(function(t){return t.id!==tx.id;});
@@ -1171,7 +1140,7 @@ function confirmDelete(){
   var backup=S.transactions.find(function(t){return t.id===id;});
   S.transactions=S.transactions.filter(function(t){return t.id!==id;});
   closeAll(); render(); toast('🗑️ Eliminado'); setSyncState('syncing');
-  apiPost({action:'deleteTransaction',id:id})
+  api('deleteTransaction',{id:id})
     .then(function(){ setSyncState(''); })
     .catch(function(){
       if(backup) S.transactions.push(backup);
@@ -1195,7 +1164,7 @@ function saveSettings(){
   var ib=parseInt(document.getElementById('sBalance').value,10)||0;
   S.names.d=n1; S.names.t=n2; S.initialBalance=ib;
   closeAll(); render(); setSyncState('syncing');
-  apiPost({action:'updateSettings',settings:{name1:n1,name2:n2,initialBalance:ib}})
+  api('updateSettings',{settings:{name1:n1,name2:n2,initialBalance:ib}})
     .then(function(){ setSyncState(''); toast('✅ Configuración guardada'); })
     .catch(function(){ setSyncState('error'); });
 }
