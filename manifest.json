@@ -1,0 +1,23 @@
+{
+  "name": "CAJA · Daniel & Thalía",
+  "short_name": "CAJA",
+  "description": "Control de gastos Daniel & Thalía",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F0EBFF",
+  "theme_color": "#9068E8",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_0.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_1.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
