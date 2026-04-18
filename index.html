@@ -434,7 +434,6 @@
       font-family: var(--display-font);
       font-size: 26px; font-weight: 600; color: var(--cl-ink);
       line-height: 1;
-      font-size-adjust: 0.52;
     }
     .header-title em { color: var(--accent); font-style: italic; }
     .header-sub {
@@ -496,12 +495,20 @@
     }
     .balance-amount {
       font-family: var(--display-font);
-      font-size: 60px; font-weight: 500;
-      color: #FFF; line-height: 1; letter-spacing: -2px;
+      font-size: 54px; font-weight: 500;
+      color: #FFF; line-height: 1; letter-spacing: -1.8px;
       user-select: none; -webkit-user-select: none;
-      font-size-adjust: 0.52;
+      white-space: nowrap;
     }
-    .balance-amount .cur { font-size: 34px; font-weight: 400; opacity: 0.85; margin-right: 2px; vertical-align: middle; }
+    .balance-amount .cur { font-size: 30px; font-weight: 400; opacity: 0.85; margin-right: 2px; vertical-align: middle; }
+    /* Per-font size corrections so all themes fit the same balance-card width */
+    html[data-theme="rosado"] .balance-amount { font-size: 48px; letter-spacing: -1.4px; } /* Fraunces */
+    html[data-theme="duna"]   .balance-amount { font-size: 58px; letter-spacing: -1.6px; } /* Cormorant thin */
+    html[data-theme="bosque"] .balance-amount { font-size: 50px; } /* DM Serif display is wide */
+    html[data-theme="papel"]  .balance-amount { font-size: 56px; } /* Instrument Serif */
+    html[data-theme="cielo"],
+    html[data-theme="noche-lila"],
+    html[data-theme="neon-noche"] .balance-amount { font-size: 52px; font-weight: 700; } /* Nunito sans */
     .balance-row { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; }
     .balance-month-pill {
       display: flex; align-items: center; gap: 7px;
@@ -537,10 +544,16 @@
     .stat-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
     .stat-value {
       font-family: var(--display-font);
-      font-size: 30px; font-weight: 500; letter-spacing: -0.4px;
-      font-size-adjust: 0.52;
+      font-size: 26px; font-weight: 500; letter-spacing: -0.3px;
+      white-space: nowrap;
     }
-    .stat-value .cur { font-size: 20px; opacity: 0.75; margin-right: 1px; }
+    .stat-value .cur { font-size: 18px; opacity: 0.75; margin-right: 1px; }
+    /* Per-font stat-value corrections */
+    html[data-theme="rosado"] .stat-value { font-size: 23px; }
+    html[data-theme="bosque"] .stat-value { font-size: 24px; }
+    html[data-theme="cielo"] .stat-value,
+    html[data-theme="noche-lila"] .stat-value,
+    html[data-theme="neon-noche"] .stat-value { font-size: 24px; font-weight: 700; }
     .stat-value.g { color: var(--green-t); }
     .stat-value.r { color: var(--red-t); }
 
@@ -651,10 +664,13 @@
     }
     .tx-amount {
       font-family: var(--display-font);
-      font-size: 22px; font-weight: 600;
+      font-size: 20px; font-weight: 600;
       white-space: nowrap; letter-spacing: -0.3px;
-      font-size-adjust: 0.52;
     }
+    html[data-theme="rosado"] .tx-amount { font-size: 18px; }
+    html[data-theme="cielo"] .tx-amount,
+    html[data-theme="noche-lila"] .tx-amount,
+    html[data-theme="neon-noche"] .tx-amount { font-size: 18px; font-weight: 700; }
     .tx-amount.egreso  { color: var(--red-t); }
     .tx-amount.ingreso { color: var(--green-t); }
 
