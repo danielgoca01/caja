@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-  <title>CajaCasa</title>
+  <title>Caja Efectivo</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="CajaCasa">
+  <meta name="apple-mobile-web-app-title" content="Caja Efectivo">
   <meta name="theme-color" content="#FAF6EE">
   <link rel="apple-touch-icon" id="appIcon" sizes="512x512" href="https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_0.jpg">
   <link rel="manifest" href="manifest.json">
@@ -432,10 +432,11 @@
     .logo svg { width: 22px; height: 22px; }
     .header-title {
       font-family: var(--display-font);
-      font-size: 26px; font-weight: 600; color: var(--cl-ink);
-      line-height: 1;
+      font-size: 22px; font-weight: 600; color: var(--cl-ink);
+      line-height: 1; letter-spacing: -0.4px;
+      white-space: nowrap;
     }
-    .header-title em { color: var(--accent); font-style: italic; }
+    .header-title em { color: var(--accent); font-style: italic; font-weight: 500; }
     .header-sub {
       font-family: 'Manrope', sans-serif;
       font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px;
@@ -995,7 +996,7 @@
     <g class="orb3"><circle r="26" fill="var(--b3)"/></g>
     <g class="orb4"><circle r="14" fill="var(--b4)"/></g>
   </svg>
-  <div class="loader-logo" style="margin-top:8px">CA<em>JA</em></div>
+  <div class="loader-logo" style="margin-top:8px">Caja <em>Efectivo</em></div>
   <div class="loader-bar"></div>
 </div>
 
@@ -1016,7 +1017,7 @@
           </svg>
         </div>
         <div>
-          <div class="header-title">CA<em>JA</em></div>
+          <div class="header-title">Caja <em>Efectivo</em></div>
           <div class="header-sub">
             <span id="headerSub">Daniel &amp; Thal&#237;a</span>
             <span class="sync-dot" id="syncDot"></span>

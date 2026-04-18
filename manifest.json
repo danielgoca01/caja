@@ -1,11 +1,11 @@
 {
-  "name": "CajaCasa",
-  "short_name": "CajaCasa",
-  "description": "Control de gastos Daniel & Thalía",
+  "name": "Caja Efectivo",
+  "short_name": "Caja Efectivo",
+  "description": "Control de gastos compartidos — diseño Claridad",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#F0EBFF",
-  "theme_color": "#9068E8",
+  "background_color": "#FAF6EE",
+  "theme_color": "#B8841A",
   "icons": [
     {
       "src": "https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_0.jpg",
