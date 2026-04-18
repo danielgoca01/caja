@@ -44,7 +44,207 @@
       --blue-av2: #3B7DE8;
       --pink-av:  #F472B6;
       --pink-av2: #DB2777;
+
+      /* Liquid mark orb colors */
+      --b1: #FF5CA8;
+      --b2: #5AFF9C;
+      --b3: #C9B8E8;
+      --b4: #7A63F0;
     }
+
+    /* ═══════════════════════════════════════════════
+       THEMES — data-theme on <html>
+       (signature = default cl-light above)
+    ═══════════════════════════════════════════════ */
+    html[data-theme="daylight"] {
+      --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #F5EADF 0%, transparent 60%),
+                        radial-gradient(800px 400px at 100% 30%, #ECE4D6 0%, transparent 60%),
+                        radial-gradient(600px 400px at 0% 100%, #DDD3C3 0%, transparent 55%),
+                        #F0E6D6;
+      --cl-card: #FDF7EC;
+      --cl-ink: #1A1823;
+      --cl-ink-soft: #4A4357;
+      --cl-ink-mute: #8B8592;
+      --cl-track: rgba(26,24,35,0.08);
+      --cl-track-pill: #FFFFFF;
+      --cl-glass: rgba(253,247,236,0.65);
+      --cl-glass-border: rgba(253,247,236,0.85);
+      --cl-card-shadow: 0 1px 2px rgba(26,24,35,0.05), 0 6px 18px rgba(26,24,35,0.07), inset 0 1px 0 rgba(255,255,255,1);
+      --accent: #D94A6B; --accent-deep: #B23550; --accent-soft: #F5A8B8;
+      --mint: #3D9D6A; --mint-soft: #C7E8D4;
+      --rose: #D94A6B; --rose-soft: #F5D6DE;
+      --green-t: #1E6B48; --red-t: #B23550;
+      --b1: #D94A6B; --b2: #3D9D6A; --b3: #7D5EC4; --b4: #1A1823;
+    }
+    html[data-theme="lux"] {
+      --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #15151F 0%, transparent 60%),
+                        radial-gradient(800px 400px at 100% 30%, #0A0A0F 0%, transparent 60%),
+                        #000000;
+      --cl-card: #1A1A26;
+      --cl-ink: #F5DEA3;
+      --cl-ink-soft: rgba(245,222,163,0.75);
+      --cl-ink-mute: rgba(245,222,163,0.5);
+      --cl-track: rgba(245,222,163,0.1);
+      --cl-track-pill: #2A2A36;
+      --cl-glass: rgba(26,26,38,0.7);
+      --cl-glass-border: rgba(245,222,163,0.12);
+      --cl-card-shadow: 0 1px 2px rgba(0,0,0,0.5), 0 6px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(245,222,163,0.08);
+      --accent: #E8C979; --accent-deep: #C9A64A; --accent-soft: #F5DEA3;
+      --mint: #C9B8E8; --mint-soft: rgba(201,184,232,0.18);
+      --rose: #E8C979; --rose-soft: rgba(232,201,121,0.18);
+      --green-t: #C9B8E8; --red-t: #E89060;
+      --b1: #E8C979; --b2: #C9B8E8; --b3: #F5DEA3; --b4: #FFF8E0;
+    }
+    html[data-theme="garden"] {
+      --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #1A2E1F 0%, transparent 60%),
+                        radial-gradient(800px 400px at 100% 30%, #0F1A13 0%, transparent 60%),
+                        #050A07;
+      --cl-card: #1E2E22;
+      --cl-ink: #E8DFC7;
+      --cl-ink-soft: rgba(232,223,199,0.75);
+      --cl-ink-mute: rgba(232,223,199,0.5);
+      --cl-track: rgba(232,223,199,0.08);
+      --cl-track-pill: #2C3E30;
+      --cl-glass: rgba(30,46,34,0.7);
+      --cl-glass-border: rgba(232,223,199,0.12);
+      --cl-card-shadow: 0 1px 2px rgba(0,0,0,0.5), 0 6px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(232,223,199,0.06);
+      --accent: #D4A574; --accent-deep: #B8864E; --accent-soft: #E8C79A;
+      --mint: #8FBA6A; --mint-soft: rgba(143,186,106,0.18);
+      --rose: #C77B4E; --rose-soft: rgba(199,123,78,0.18);
+      --green-t: #8FBA6A; --red-t: #C77B4E;
+      --b1: #D4A574; --b2: #8FBA6A; --b3: #C77B4E; --b4: #F5EAD5;
+    }
+    html[data-theme="sunset"] {
+      --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #3D1A1A 0%, transparent 60%),
+                        radial-gradient(800px 400px at 100% 30%, #2A0F0F 0%, transparent 60%),
+                        #1A0707;
+      --cl-card: #3D1F1F;
+      --cl-ink: #FDE4D4;
+      --cl-ink-soft: rgba(253,228,212,0.75);
+      --cl-ink-mute: rgba(253,228,212,0.5);
+      --cl-track: rgba(253,228,212,0.08);
+      --cl-track-pill: #5A2E2E;
+      --cl-glass: rgba(61,31,31,0.7);
+      --cl-glass-border: rgba(253,228,212,0.12);
+      --cl-card-shadow: 0 1px 2px rgba(0,0,0,0.5), 0 6px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(253,228,212,0.06);
+      --accent: #FF6B4A; --accent-deep: #DB4A2B; --accent-soft: #FF9D82;
+      --mint: #FFB347; --mint-soft: rgba(255,179,71,0.18);
+      --rose: #FF8FA3; --rose-soft: rgba(255,143,163,0.18);
+      --green-t: #FFB347; --red-t: #FF8FA3;
+      --b1: #FF6B4A; --b2: #FFB347; --b3: #FF8FA3; --b4: #FFF3E0;
+    }
+    html[data-theme="nordic"] {
+      --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #F7F6F4 0%, transparent 60%),
+                        radial-gradient(800px 400px at 100% 30%, #F3F2EF 0%, transparent 60%),
+                        #EBE9E4;
+      --cl-card: #FFFFFF;
+      --cl-ink: #1E1E24;
+      --cl-ink-soft: #4E4E56;
+      --cl-ink-mute: #8E8E96;
+      --cl-track: rgba(30,30,36,0.06);
+      --cl-track-pill: #FFFFFF;
+      --cl-glass: rgba(255,255,255,0.65);
+      --cl-glass-border: rgba(255,255,255,0.85);
+      --cl-card-shadow: 0 1px 2px rgba(30,30,36,0.04), 0 6px 18px rgba(30,30,36,0.06), inset 0 1px 0 rgba(255,255,255,1);
+      --accent: #4A6FA5; --accent-deep: #355580; --accent-soft: #8AA3C4;
+      --mint: #8AA3C4; --mint-soft: #D4DDE8;
+      --rose: #A5778A; --rose-soft: #E8D4DC;
+      --green-t: #4A6FA5; --red-t: #A5778A;
+      --b1: #4A6FA5; --b2: #8AA3C4; --b3: #D4DDE8; --b4: #1E1E24;
+    }
+    html[data-theme="soft"] {
+      --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #F5E8ED 0%, transparent 60%),
+                        radial-gradient(800px 400px at 100% 30%, #EDE4F2 0%, transparent 60%),
+                        radial-gradient(600px 400px at 0% 100%, #E5EEF0 0%, transparent 55%),
+                        #F5ECEF;
+      --cl-card: #FFFFFF;
+      --cl-ink: #3D2E4A;
+      --cl-ink-soft: #5E4F6B;
+      --cl-ink-mute: #9288A0;
+      --cl-track: rgba(61,46,74,0.07);
+      --cl-track-pill: #FFFFFF;
+      --cl-glass: rgba(255,255,255,0.65);
+      --cl-glass-border: rgba(255,255,255,0.85);
+      --cl-card-shadow: 0 1px 2px rgba(61,46,74,0.05), 0 6px 18px rgba(61,46,74,0.07), inset 0 1px 0 rgba(255,255,255,1);
+      --accent: #C5A3D8; --accent-deep: #A37EB8; --accent-soft: #E5D4EE;
+      --mint: #A8D8C5; --mint-soft: #D9EFE5;
+      --rose: #F2A8C5; --rose-soft: #F9D5E3;
+      --green-t: #3D8A6A; --red-t: #C66B8A;
+      --b1: #F2A8C5; --b2: #A8D8C5; --b3: #C5B8E8; --b4: #3D2E4A;
+    }
+    html[data-theme="bold"] {
+      --cl-bg-gradient: #FFFFFF;
+      --cl-card: #FFFFFF;
+      --cl-ink: #000000;
+      --cl-ink-soft: rgba(0,0,0,0.7);
+      --cl-ink-mute: rgba(0,0,0,0.45);
+      --cl-track: rgba(0,0,0,0.08);
+      --cl-track-pill: #000000;
+      --cl-glass: rgba(255,255,255,0.7);
+      --cl-glass-border: rgba(0,0,0,0.1);
+      --cl-card-shadow: 0 0 0 1px rgba(0,0,0,0.08), 0 4px 14px rgba(0,0,0,0.05);
+      --accent: #000000; --accent-deep: #000000; --accent-soft: #D9FF4A;
+      --mint: #000000; --mint-soft: #D9FF4A;
+      --rose: #000000; --rose-soft: rgba(0,0,0,0.08);
+      --green-t: #000000; --red-t: #000000;
+      --b1: #000000; --b2: #D9FF4A; --b3: #000000; --b4: #FFFFFF;
+    }
+    /* In bold, the pill on segmented needs white text */
+    html[data-theme="bold"] .seg-btn.active { color: #FFFFFF; }
+    html[data-theme="bold"] .balance-card {
+      background: #000000 !important;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 8px 24px rgba(0,0,0,0.2) !important;
+    }
+    html[data-theme="lux"] .balance-card {
+      background: linear-gradient(135deg, #2A2A36 0%, #0A0A0F 100%) !important;
+      color: #F5DEA3;
+    }
+    html[data-theme="garden"] .balance-card {
+      background: linear-gradient(135deg, #2C4E35 0%, #1A2E1F 100%) !important;
+    }
+    html[data-theme="sunset"] .balance-card {
+      background: linear-gradient(135deg, #5A2E2E 0%, #2A0F0F 100%) !important;
+    }
+
+    /* ═══════════════════════════════════════════════
+       LIQUID MARK — blob animation
+    ═══════════════════════════════════════════════ */
+    @keyframes liq-orb1 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(3.5px,-2.5px) scale(1.1); } 66% { transform: translate(-1.5px,3.5px) scale(0.95); } }
+    @keyframes liq-orb2 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(-3px,-2px) scale(1.05); } 66% { transform: translate(2.5px,3px) scale(1.1); } }
+    @keyframes liq-orb3 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(2px,3.5px) scale(0.95); } 66% { transform: translate(-2.5px,-1.5px) scale(1.15); } }
+    @keyframes liq-orb4 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(0,-4px) scale(1.1); } }
+    @keyframes liq-orb1-lg { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(10px,-7px) scale(1.1); } 66% { transform: translate(-5px,9px) scale(0.95); } }
+    @keyframes liq-orb2-lg { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(-9px,-6px) scale(1.05); } 66% { transform: translate(7px,8px) scale(1.1); } }
+    @keyframes liq-orb3-lg { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(6px,10px) scale(0.95); } 66% { transform: translate(-8px,-4px) scale(1.15); } }
+    @keyframes liq-orb4-lg { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(0,-11px) scale(1.1); } }
+    .liquid-mark .orb1 { animation: liq-orb1 8s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    .liquid-mark .orb2 { animation: liq-orb2 8s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    .liquid-mark .orb3 { animation: liq-orb3 8s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    .liquid-mark .orb4 { animation: liq-orb4 6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    .liquid-mark-lg .orb1 { animation: liq-orb1-lg 8s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    .liquid-mark-lg .orb2 { animation: liq-orb2-lg 8s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    .liquid-mark-lg .orb3 { animation: liq-orb3-lg 8s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    .liquid-mark-lg .orb4 { animation: liq-orb4-lg 6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+    /* Theme picker swatches */
+    .theme-picker { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+    .ts-btn {
+      width:38px; height:38px; border-radius:50%;
+      border:2px solid transparent; cursor:pointer; padding:0;
+      transition: transform 0.18s, border-color 0.18s;
+      position:relative;
+      box-shadow: 0 2px 6px rgba(26,19,51,0.12);
+    }
+    .ts-btn:hover { transform: scale(1.12); }
+    .ts-btn.active { border-color: var(--cl-ink); }
+    .ts-btn[data-t="signature"]{ background: radial-gradient(circle at 30% 30%, #FF5CA8, #5AFF9C 55%, #7A63F0); }
+    .ts-btn[data-t="daylight"]{ background: radial-gradient(circle at 30% 30%, #D94A6B, #ECE4D6 55%, #7D5EC4); }
+    .ts-btn[data-t="lux"]{ background: radial-gradient(circle at 30% 30%, #E8C979, #000 55%, #F5DEA3); }
+    .ts-btn[data-t="garden"]{ background: radial-gradient(circle at 30% 30%, #8FBA6A, #1A2E1F 55%, #C77B4E); }
+    .ts-btn[data-t="sunset"]{ background: radial-gradient(circle at 30% 30%, #FF6B4A, #2A0F0F 55%, #FFB347); }
+    .ts-btn[data-t="nordic"]{ background: radial-gradient(circle at 30% 30%, #4A6FA5, #F7F6F4 55%, #8AA3C4); }
+    .ts-btn[data-t="soft"]{ background: radial-gradient(circle at 30% 30%, #F2A8C5, #EDE4F2 55%, #C5B8E8); }
+    .ts-btn[data-t="bold"]{ background: radial-gradient(circle at 30% 30%, #000, #fff 55%, #D9FF4A); }
 
     html, body {
       width: 100%; min-height: 100%;
@@ -665,13 +865,23 @@
 <!-- CANVAS para animaciones -->
 <canvas id="animCanvas" style="display:none"></canvas>
 
+<!-- LIQUID MARK — filtros SVG globales -->
+<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true">
+  <defs>
+    <filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10"/></filter>
+    <filter id="goo-lg"><feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur"/><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -11"/></filter>
+  </defs>
+</svg>
+
 <!-- LOADING -->
 <div id="loadingScreen">
-  <div class="loader-avatars">
-    <div class="av d" style="width:48px;height:48px;font-size:22px;box-shadow:0 4px 16px rgba(59,125,232,0.4)">D</div>
-    <div class="av t" style="width:48px;height:48px;font-size:22px;box-shadow:0 4px 16px rgba(219,39,119,0.4);margin-left:-10px">T</div>
-  </div>
-  <div class="loader-logo">CA<em>JA</em></div>
+  <svg class="liquid-mark-lg" viewBox="-60 -60 120 120" width="120" height="120" style="filter:url(#goo-lg)">
+    <circle class="orb1" r="25" fill="var(--b1)"/>
+    <circle class="orb2" r="22" fill="var(--b2)"/>
+    <circle class="orb3" r="26" fill="var(--b3)"/>
+    <circle class="orb4" r="14" fill="var(--b4)"/>
+  </svg>
+  <div class="loader-logo" style="margin-top:8px">CA<em>JA</em></div>
   <div class="loader-bar"></div>
 </div>
 
@@ -683,11 +893,12 @@
     <!-- HEADER -->
     <div class="header">
       <div class="header-left">
-        <div class="logo">
-          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="6" width="18" height="13" rx="3" fill="rgba(255,255,255,0.9)"/>
-            <path d="M6 6V5a5 5 0 0 1 10 0v1" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round"/>
-            <rect x="9" y="10.5" width="4" height="2.5" rx="1.25" fill="#7A63F0"/>
+        <div class="logo" style="background:transparent;box-shadow:none;overflow:visible;width:46px;height:46px">
+          <svg class="liquid-mark" viewBox="-30 -30 60 60" style="width:46px!important;height:46px!important;filter:url(#goo)">
+            <circle class="orb1" r="11" fill="var(--b1)"/>
+            <circle class="orb2" r="10" fill="var(--b2)"/>
+            <circle class="orb3" r="11.5" fill="var(--b3)"/>
+            <circle class="orb4" r="6.5" fill="var(--b4)"/>
           </svg>
         </div>
         <div>
@@ -888,6 +1099,23 @@
     <div style="padding:14px 18px 8px">
       <button class="save-btn" style="margin:0;width:100%" onclick="saveSettings()">Guardar</button>
     </div>
+
+    <!-- THEME PICKER -->
+    <div style="margin:0 18px 14px;border-radius:18px;border:1px solid var(--cl-track);background:var(--cl-card);box-shadow:var(--cl-card-shadow);padding:16px">
+      <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--cl-ink);margin-bottom:4px">Tema de color</div>
+      <div style="font-family:'Manrope',sans-serif;font-size:11px;color:var(--cl-ink-mute);font-weight:500;margin-bottom:12px" id="themeLabel">Signature</div>
+      <div class="theme-picker" id="themePicker">
+        <button class="ts-btn" data-t="signature" title="Signature" onclick="setTheme('signature')"></button>
+        <button class="ts-btn" data-t="daylight" title="Daylight" onclick="setTheme('daylight')"></button>
+        <button class="ts-btn" data-t="lux" title="Midnight Lux" onclick="setTheme('lux')"></button>
+        <button class="ts-btn" data-t="garden" title="Garden" onclick="setTheme('garden')"></button>
+        <button class="ts-btn" data-t="sunset" title="Sunset" onclick="setTheme('sunset')"></button>
+        <button class="ts-btn" data-t="nordic" title="Nordic Calm" onclick="setTheme('nordic')"></button>
+        <button class="ts-btn" data-t="soft" title="Pastel Soft" onclick="setTheme('soft')"></button>
+        <button class="ts-btn" data-t="bold" title="High Contrast" onclick="setTheme('bold')"></button>
+      </div>
+    </div>
+
     <div style="margin:0 18px 14px;border-radius:18px;border:1px solid var(--cl-track);background:var(--cl-card);box-shadow:var(--cl-card-shadow);padding:16px">
       <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--cl-ink);margin-bottom:12px">Ícono de pantalla de inicio</div>
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
@@ -1013,33 +1241,107 @@ function getCatIcon(catId) {
 }
 
 /* ══════════════════════════════════════════════════════
-   ÍCONO PWA
+   ÍCONO PWA  (fotos + liquid mark generado on-the-fly)
 ══════════════════════════════════════════════════════ */
 var ICON_URLS=[
   'https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_0.jpg',
-  'https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_1.jpg'
+  'https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_1.jpg',
+  null   // Liquid — se rellena en initLiquidIcon()
 ];
-var ICON_PHOTOS=[ICON_URLS[0], ICON_URLS[1]];
+var ICON_PHOTOS=[ICON_URLS[0], ICON_URLS[1], null];
+var ICON_LABELS=['Foto 1','Foto 2','Liquid ✨'];
+
+function _liquidSVG(){
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">'
+    +'<defs><filter id="g"><feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur"/><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -11"/></filter></defs>'
+    +'<rect width="512" height="512" fill="#1A1823" rx="115" ry="115"/>'
+    +'<g filter="url(#g)" transform="translate(256 256)">'
+    +'<circle r="100" fill="#FF5CA8" transform="translate(-25 -20)"/>'
+    +'<circle r="90" fill="#5AFF9C" transform="translate(30 -10)"/>'
+    +'<circle r="110" fill="#C9B8E8" transform="translate(-20 30)"/>'
+    +'<circle r="56" fill="#ECE9F2" transform="translate(10 -10)"/>'
+    +'</g></svg>';
+}
+
+function initLiquidIcon(){
+  // Cached on localStorage (después de la 1ra carga)
+  var cached=localStorage.getItem('cajaLiquidIconPng');
+  if(cached){ ICON_URLS[2]=cached; ICON_PHOTOS[2]=cached; return; }
+  try{
+    var svg=_liquidSVG();
+    var img=new Image();
+    img.onload=function(){
+      var c=document.createElement('canvas'); c.width=512; c.height=512;
+      c.getContext('2d').drawImage(img,0,0);
+      try{
+        var uri=c.toDataURL('image/png');
+        ICON_URLS[2]=uri; ICON_PHOTOS[2]=uri;
+        localStorage.setItem('cajaLiquidIconPng', uri);
+        _syncIconPreview(parseInt(localStorage.getItem('cajaIconIdx')||'0',10));
+      }catch(e){}
+    };
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  }catch(e){}
+}
 
 function initAppIcon(){
+  initLiquidIcon();
   var idx=parseInt(localStorage.getItem('cajaIconIdx')||'0',10);
   var l=document.getElementById('appIcon');
-  if(l) l.href=ICON_URLS[idx]||ICON_URLS[0];
+  if(l && ICON_URLS[idx]) l.href=ICON_URLS[idx];
   _syncIconPreview(idx);
 }
 function _syncIconPreview(idx){
   var p=document.getElementById('iconPreview');
   var lb=document.getElementById('iconLabel');
   if(p) p.src=ICON_PHOTOS[idx]||ICON_PHOTOS[0];
-  if(lb) lb.textContent='Foto '+(idx+1)+' de '+ICON_URLS.length;
+  if(lb) lb.textContent=ICON_LABELS[idx]+' · '+(idx+1)+' de '+ICON_URLS.length;
 }
 function cycleIcon(){
   var idx=(parseInt(localStorage.getItem('cajaIconIdx')||'0',10)+1)%ICON_URLS.length;
   localStorage.setItem('cajaIconIdx',String(idx));
   var l=document.getElementById('appIcon');
-  if(l) l.href=ICON_URLS[idx];
+  if(l && ICON_URLS[idx]) l.href=ICON_URLS[idx];
   _syncIconPreview(idx);
-  toast('Foto '+(idx+1)+' seleccionada');
+  toast(ICON_LABELS[idx]+' seleccionado');
+}
+
+/* ══════════════════════════════════════════════════════
+   TEMAS DE COLOR
+══════════════════════════════════════════════════════ */
+var THEME_NAMES = {
+  signature: 'Signature · Pastel',
+  daylight:  'Daylight · Cream',
+  lux:       'Midnight Lux · Gold',
+  garden:    'Garden · Earth',
+  sunset:    'Sunset · Coral',
+  nordic:    'Nordic Calm · Blue',
+  soft:      'Pastel Soft',
+  bold:      'High Contrast'
+};
+var THEME_META_COLORS = {
+  signature:'#7A63F0', daylight:'#F5EADF', lux:'#0A0A0F', garden:'#1A2E1F',
+  sunset:'#3D1A1A', nordic:'#F7F6F4', soft:'#F5E8ED', bold:'#FFFFFF'
+};
+function setTheme(t){
+  if(!THEME_NAMES[t]) t='signature';
+  if(t==='signature') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('cajaTheme', t);
+  // Sincroniza botones activos
+  document.querySelectorAll('.ts-btn').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-t')===t);
+  });
+  // Etiqueta
+  var lbl=document.getElementById('themeLabel');
+  if(lbl) lbl.textContent=THEME_NAMES[t];
+  // theme-color meta para status bar PWA
+  var mc=document.querySelector('meta[name="theme-color"]');
+  if(mc) mc.setAttribute('content', THEME_META_COLORS[t]||'#7A63F0');
+}
+function initTheme(){
+  var t=localStorage.getItem('cajaTheme')||'signature';
+  setTheme(t);
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1785,6 +2087,7 @@ var _refreshTimer=null;
 window.addEventListener('focus', function(){ clearTimeout(_refreshTimer); _refreshTimer=setTimeout(silentRefresh,400); });
 document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeAll(); });
 
+initTheme();
 initAppIcon();
 initSeg();
 loadFromServer();
