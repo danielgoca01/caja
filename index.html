@@ -209,6 +209,103 @@
     }
 
     /* ═══════════════════════════════════════════════
+       GRANULAR OVERRIDES — data-bg / data-accent / data-font
+       Permiten mezclar presets con elecciones individuales.
+    ═══════════════════════════════════════════════ */
+    html[data-bg="lilac"]  { --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #FAF6FF 0%, transparent 60%), radial-gradient(800px 400px at 100% 30%, #EADDFF 0%, transparent 60%), #F6F3FE; }
+    html[data-bg="cream"]  { --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #FFF5E0 0%, transparent 60%), radial-gradient(800px 400px at 100% 30%, #FAEBC2 0%, transparent 60%), #FAF6EE; }
+    html[data-bg="sand"]   { --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #F7F1E4 0%, transparent 60%), radial-gradient(800px 400px at 100% 30%, #E4D8C3 0%, transparent 60%), #F0E8DA; }
+    html[data-bg="blush"]  { --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #FFF8F5 0%, transparent 60%), radial-gradient(800px 400px at 100% 30%, #FBE2DA 0%, transparent 60%), #FDF0EC; }
+    html[data-bg="stone"]  { --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #F4F2EE 0%, transparent 60%), radial-gradient(800px 400px at 100% 30%, #E6E3DD 0%, transparent 60%), #EFEDE8; }
+    html[data-bg="paper"]  { --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #FDFDFC 0%, transparent 60%), radial-gradient(800px 400px at 100% 30%, #EEEEEA 0%, transparent 60%), #F8F8F5; }
+    html[data-bg="sky"]    { --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #F7F9FD 0%, transparent 60%), radial-gradient(800px 400px at 100% 30%, #DDE6F5 0%, transparent 60%), #EEF3FB; }
+    html[data-bg="mist"]   { --cl-bg-gradient: radial-gradient(1000px 500px at 20% -10%, #F1F5F3 0%, transparent 60%), radial-gradient(800px 400px at 100% 30%, #DDE5E1 0%, transparent 60%), #E8EEEB; }
+
+    html[data-accent="lilac"]  { --accent:#7A63F0; --accent-deep:#5B3FE0; --accent-soft:#B9A8FF; --accent-rgb:91,63,224; --accent-tint:#F0ECFF; --b1:#B9A8FF; --b2:#7A63F0; --b3:#5B3FE0; }
+    html[data-accent="rose"]   { --accent:#F07A9E; --accent-deep:#D64B6E; --accent-soft:#FFB5C8; --accent-rgb:214,75,110; --accent-tint:#FCE4EB; --b1:#FFB5C8; --b2:#F07A9E; --b3:#D64B6E; }
+    html[data-accent="mint"]   { --accent:#4AE0A4; --accent-deep:#2EAF7A; --accent-soft:#A8EEC9; --accent-rgb:46,175,122; --accent-tint:#DCF5E8; --b1:#A8EEC9; --b2:#4AE0A4; --b3:#2EAF7A; }
+    html[data-accent="indigo"] { --accent:#5B7BFF; --accent-deep:#3B5BDB; --accent-soft:#A9B8FF; --accent-rgb:59,91,219; --accent-tint:#E1E7FA; --b1:#A9B8FF; --b2:#5B7BFF; --b3:#3B5BDB; }
+    html[data-accent="peach"]  { --accent:#F09E6E; --accent-deep:#D97757; --accent-soft:#FFCBA8; --accent-rgb:217,119,87; --accent-tint:#FCE5D8; --b1:#FFCBA8; --b2:#F09E6E; --b3:#D97757; }
+    html[data-accent="sage"]   { --accent:#7FA36E; --accent-deep:#4A7A5C; --accent-soft:#B7CBA0; --accent-rgb:74,122,92; --accent-tint:#E5EEDF; --b1:#B7CBA0; --b2:#7FA36E; --b3:#4A7A5C; }
+    html[data-accent="slate"]  { --accent:#6C7589; --accent-deep:#434A5E; --accent-soft:#A4ACBF; --accent-rgb:67,74,94; --accent-tint:#ECEEF3; --b1:#A4ACBF; --b2:#6C7589; --b3:#434A5E; }
+    html[data-accent="amber"]  { --accent:#D4A14A; --accent-deep:#B8841A; --accent-soft:#F5C88A; --accent-rgb:184,132,26; --accent-tint:#FBEED2; --b1:#F5C88A; --b2:#D4A14A; --b3:#B8841A; }
+
+    html[data-font="playfair"]   { --display-font: 'Playfair Display', serif; }
+    html[data-font="fraunces"]   { --display-font: 'Fraunces', serif; }
+    html[data-font="instrument"] { --display-font: 'Instrument Serif', serif; }
+    html[data-font="dmserif"]    { --display-font: 'DM Serif Display', serif; }
+    html[data-font="cormorant"]  { --display-font: 'Cormorant Garamond', serif; }
+    html[data-font="garamond"]   { --display-font: 'EB Garamond', serif; }
+    html[data-font="nunito"]     { --display-font: 'Nunito', sans-serif; }
+    html[data-font="rubik"]      { --display-font: 'Rubik', sans-serif; }
+
+    /* Granular picker UI */
+    .granular-section {
+      margin: 4px 18px 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: var(--cl-card);
+      box-shadow: var(--cl-card-shadow);
+    }
+    .granular-row { margin-bottom: 12px; }
+    .granular-row:last-of-type { margin-bottom: 4px; }
+    .granular-label {
+      font-family: 'Manrope', sans-serif;
+      font-size: 10.5px; font-weight: 700;
+      letter-spacing: 1.4px; text-transform: uppercase;
+      color: var(--cl-ink-mute); margin-bottom: 8px;
+    }
+    .granular-opts { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .g-bg, .g-accent {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer; padding: 0;
+      transition: transform 0.18s, border-color 0.18s;
+      box-shadow: 0 1px 4px rgba(26,19,51,0.15);
+    }
+    .g-bg:hover, .g-accent:hover, .g-font:hover { transform: scale(1.10); }
+    .g-bg.active, .g-accent.active, .g-font.active {
+      border-color: var(--cl-ink);
+      transform: scale(1.05);
+    }
+    .g-font {
+      padding: 7px 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--cl-track);
+      background: var(--cl-card);
+      color: var(--cl-ink);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.18s;
+    }
+    .g-font.active { border-color: var(--cl-ink); background: var(--accent-tint); }
+    .g-bg[data-v="lilac"]  { background: #F6F3FE; }
+    .g-bg[data-v="cream"]  { background: #FAF6EE; }
+    .g-bg[data-v="sand"]   { background: #F0E8DA; }
+    .g-bg[data-v="blush"]  { background: #FDF0EC; }
+    .g-bg[data-v="stone"]  { background: #EFEDE8; }
+    .g-bg[data-v="paper"]  { background: #F8F8F5; }
+    .g-bg[data-v="sky"]    { background: #EEF3FB; }
+    .g-bg[data-v="mist"]   { background: #E8EEEB; }
+    .g-bg { border: 2px solid rgba(0,0,0,0.12); }
+    .g-bg.active { border-color: var(--cl-ink); }
+    .g-accent[data-v="lilac"]  { background: #7A63F0; }
+    .g-accent[data-v="rose"]   { background: #F07A9E; }
+    .g-accent[data-v="mint"]   { background: #4AE0A4; }
+    .g-accent[data-v="indigo"] { background: #5B7BFF; }
+    .g-accent[data-v="peach"]  { background: #F09E6E; }
+    .g-accent[data-v="sage"]   { background: #7FA36E; }
+    .g-accent[data-v="slate"]  { background: #6C7589; }
+    .g-accent[data-v="amber"]  { background: #D4A14A; }
+    .granular-reset {
+      margin-top: 12px; width: 100%;
+      padding: 10px; border: none; border-radius: 10px;
+      background: var(--cl-track); color: var(--cl-ink-soft);
+      font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ═══════════════════════════════════════════════
        LIQUID MARK — blob animation
     ═══════════════════════════════════════════════ */
     @keyframes liq-orb1 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(3.5px,-2.5px) scale(1.1); } 66% { transform: translate(-1.5px,3.5px) scale(0.95); } }
@@ -1356,6 +1453,51 @@
       <div class="ap-spark">✦</div>
       <div>Cada ambiente cambia fondo, acento y tipografía a la vez. Toca una tarjeta para aplicarla al instante.</div>
     </div>
+
+    <!-- Personalizar (mezcla individual) -->
+    <div class="granular-section">
+      <div class="granular-row">
+        <div class="granular-label">Fondo</div>
+        <div class="granular-opts" id="gBgOpts">
+          <button class="g-bg" data-v="lilac" onclick="setBg('lilac')"></button>
+          <button class="g-bg" data-v="cream" onclick="setBg('cream')"></button>
+          <button class="g-bg" data-v="sand" onclick="setBg('sand')"></button>
+          <button class="g-bg" data-v="blush" onclick="setBg('blush')"></button>
+          <button class="g-bg" data-v="stone" onclick="setBg('stone')"></button>
+          <button class="g-bg" data-v="paper" onclick="setBg('paper')"></button>
+          <button class="g-bg" data-v="sky" onclick="setBg('sky')"></button>
+          <button class="g-bg" data-v="mist" onclick="setBg('mist')"></button>
+        </div>
+      </div>
+      <div class="granular-row">
+        <div class="granular-label">Acento</div>
+        <div class="granular-opts" id="gAccentOpts">
+          <button class="g-accent" data-v="lilac" onclick="setAccent('lilac')"></button>
+          <button class="g-accent" data-v="rose" onclick="setAccent('rose')"></button>
+          <button class="g-accent" data-v="mint" onclick="setAccent('mint')"></button>
+          <button class="g-accent" data-v="indigo" onclick="setAccent('indigo')"></button>
+          <button class="g-accent" data-v="peach" onclick="setAccent('peach')"></button>
+          <button class="g-accent" data-v="sage" onclick="setAccent('sage')"></button>
+          <button class="g-accent" data-v="slate" onclick="setAccent('slate')"></button>
+          <button class="g-accent" data-v="amber" onclick="setAccent('amber')"></button>
+        </div>
+      </div>
+      <div class="granular-row">
+        <div class="granular-label">Tipografía</div>
+        <div class="granular-opts" id="gFontOpts">
+          <button class="g-font" data-v="playfair" style="font-family:'Playfair Display',serif" onclick="setFont('playfair')">Playfair</button>
+          <button class="g-font" data-v="fraunces" style="font-family:'Fraunces',serif" onclick="setFont('fraunces')">Fraunces</button>
+          <button class="g-font" data-v="instrument" style="font-family:'Instrument Serif',serif" onclick="setFont('instrument')">Instrument</button>
+          <button class="g-font" data-v="dmserif" style="font-family:'DM Serif Display',serif" onclick="setFont('dmserif')">DM Serif</button>
+          <button class="g-font" data-v="cormorant" style="font-family:'Cormorant Garamond',serif;font-weight:600" onclick="setFont('cormorant')">Cormorant</button>
+          <button class="g-font" data-v="garamond" style="font-family:'EB Garamond',serif" onclick="setFont('garamond')">Garamond</button>
+          <button class="g-font" data-v="nunito" style="font-family:'Nunito',sans-serif;font-weight:700" onclick="setFont('nunito')">Nunito</button>
+          <button class="g-font" data-v="rubik" style="font-family:'Rubik',sans-serif;font-weight:600" onclick="setFont('rubik')">Rubik</button>
+        </div>
+      </div>
+      <button class="granular-reset" onclick="resetCustom()">Restaurar valores del ambiente</button>
+    </div>
+
     <div style="height:16px"></div>
   </div>
 
@@ -1554,6 +1696,12 @@ function setTheme(t){
   if(t==='editorial') document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('cajaTheme', t);
+  // Un preset limpia overrides granulares — aplica todo el combo
+  ['bg','accent','font'].forEach(function(k){
+    document.documentElement.removeAttribute('data-'+k);
+    localStorage.removeItem('caja_'+k);
+  });
+  _syncGranularSel();
   // Sincroniza cards de apariencia (selected state)
   document.querySelectorAll('.apariencia-card').forEach(function(c){
     c.classList.toggle('selected', c.getAttribute('data-t')===t);
@@ -1569,14 +1717,54 @@ function initTheme(){
   var saved=localStorage.getItem('cajaTheme');
   var t=(saved && THEME_NAMES[saved]) ? saved : 'editorial';
   setTheme(t);
+  // Re-aplica overrides granulares si existen
+  ['bg','accent','font'].forEach(function(k){
+    var v=localStorage.getItem('caja_'+k);
+    if(v) document.documentElement.setAttribute('data-'+k, v);
+  });
+  _syncGranularSel();
 }
 function openAppariencia(){
-  // Sincroniza seleccionado
   var cur=localStorage.getItem('cajaTheme')||'editorial';
   document.querySelectorAll('.apariencia-card').forEach(function(c){
     c.classList.toggle('selected', c.getAttribute('data-t')===cur);
   });
+  _syncGranularSel();
   open_('apparienciaModal');
+}
+function _syncGranularSel(){
+  ['bg','accent','font'].forEach(function(k){
+    var v=localStorage.getItem('caja_'+k)||'';
+    document.querySelectorAll('.g-'+k).forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-v')===v);
+    });
+  });
+}
+function setBg(v){
+  document.documentElement.setAttribute('data-bg', v);
+  localStorage.setItem('caja_bg', v);
+  _syncGranularSel();
+}
+function setAccent(v){
+  document.documentElement.setAttribute('data-accent', v);
+  localStorage.setItem('caja_accent', v);
+  _syncGranularSel();
+  // Actualiza el dot preview en settings
+  var d=document.getElementById('themePreviewDot');
+  if(d) d.style.background='linear-gradient(135deg, var(--accent-soft), var(--accent) 55%, var(--accent-deep))';
+}
+function setFont(v){
+  document.documentElement.setAttribute('data-font', v);
+  localStorage.setItem('caja_font', v);
+  _syncGranularSel();
+}
+function resetCustom(){
+  ['bg','accent','font'].forEach(function(k){
+    document.documentElement.removeAttribute('data-'+k);
+    localStorage.removeItem('caja_'+k);
+  });
+  _syncGranularSel();
+  toast('Valores del ambiente restaurados');
 }
 
 /* ══════════════════════════════════════════════════════
