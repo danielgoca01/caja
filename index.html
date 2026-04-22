@@ -524,7 +524,29 @@
       font-family: 'Manrope', sans-serif;
       font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.88);
     }
-    .balance-avatars { display: flex; }
+    .balance-avatars { display: flex; align-items: center; }
+    .balance-avatars > * + * { margin-left: -10px; }
+    .balance-trend {
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px; font-weight: 500;
+      color: rgba(255,255,255,0.75);
+      margin-top: 8px; letter-spacing: 0.1px;
+    }
+    .balance-trend .delta { font-weight: 700; }
+    .balance-trend .delta.pos { color: var(--mint); }
+    .balance-trend .delta.neg { color: var(--rose); }
+    .balance-spark { opacity: 0.95; align-self: center; margin-left: auto; margin-right: 12px; pointer-events: none; }
+
+    /* Stat card footer (mini spark + trend) */
+    .stat-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+    .stat-trend {
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .stat-trend.g { color: var(--green-t); }
+    .stat-trend.r { color: var(--red-t); }
+    .stat-spark { display: flex; align-items: center; height: 24px; pointer-events: none; }
 
     /* ─── STATS CARDS ─────────────────────────── */
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px 16px 0; }
@@ -1038,14 +1060,15 @@
       <div class="balance-label">SALDO ACTUAL</div>
       <div class="balance-amount"><span class="cur">$</span><span id="balanceNum">—</span></div>
       <div class="balance-row">
-        <div class="balance-month-pill">
-          <div class="balance-month-dot"></div>
-          <div class="balance-month-text" id="heroMonth">Cargando…</div>
+        <div>
+          <div class="balance-month-pill">
+            <div class="balance-month-dot"></div>
+            <div class="balance-month-text" id="heroMonth">Cargando…</div>
+          </div>
+          <div class="balance-trend" id="balanceTrend"></div>
         </div>
-        <div class="balance-avatars">
-          <div class="av d hero-av" id="heroAvD">D</div>
-          <div class="av t hero-av t" id="heroAvT">T</div>
-        </div>
+        <div class="balance-spark" id="balanceSpark"></div>
+        <div class="balance-avatars" id="balanceAvatars"></div>
       </div>
     </div>
 
@@ -1056,12 +1079,20 @@
           <div class="stat-dot" style="background:var(--mint)"></div>Ingresos
         </div>
         <div class="stat-value g"><span class="cur">$</span><span id="statIngresos">—</span></div>
+        <div class="stat-foot">
+          <span class="stat-trend g" id="trendIng">+0 movs</span>
+          <div class="stat-spark" id="sparkIng"></div>
+        </div>
       </div>
       <div class="stat-card">
         <div class="stat-label">
           <div class="stat-dot" style="background:var(--rose)"></div>Egresos
         </div>
         <div class="stat-value r"><span class="cur">$</span><span id="statEgresos">—</span></div>
+        <div class="stat-foot">
+          <span class="stat-trend r" id="trendEgr">+0 movs</span>
+          <div class="stat-spark" id="sparkEgr"></div>
+        </div>
       </div>
     </div>
 
@@ -1577,12 +1608,129 @@ function balance(){
   return S.transactions.reduce(function(a,tx){ return tx.type==='ingreso'?a+tx.amount:a-tx.amount; }, S.initialBalance);
 }
 function monthStats(){
-  var n=new Date(),m=n.getMonth(),y=n.getFullYear(),ing=0,egr=0;
+  var n=new Date(),m=n.getMonth(),y=n.getFullYear(),ing=0,egr=0,mov=0;
   S.transactions.forEach(function(tx){
     var d=new Date(tx.date);
-    if(d.getMonth()===m&&d.getFullYear()===y){ tx.type==='ingreso'?ing+=tx.amount:egr+=tx.amount; }
+    if(d.getMonth()===m&&d.getFullYear()===y){ tx.type==='ingreso'?ing+=tx.amount:egr+=tx.amount; mov++; }
   });
-  return {ing:ing,egr:egr};
+  return {ing:ing,egr:egr,mov:mov};
+}
+
+/* ══════════════════════════════════════════════════════
+   TREND / HISTORY — para sparklines + indicadores
+══════════════════════════════════════════════════════ */
+function prevMonthStats(){
+  var n=new Date(),m=n.getMonth(),y=n.getFullYear();
+  if(m===0){m=11;y--;}else{m--;}
+  var ing=0,egr=0,mov=0;
+  S.transactions.forEach(function(tx){
+    var d=new Date(tx.date);
+    if(d.getMonth()===m&&d.getFullYear()===y){ tx.type==='ingreso'?ing+=tx.amount:egr+=tx.amount; mov++; }
+  });
+  return {ing:ing,egr:egr,mov:mov};
+}
+// Balance cumulative history — N points sampled across transactions
+function balanceHistory(N){
+  N=N||13;
+  if(!S.transactions.length) return [S.initialBalance,S.initialBalance];
+  var sorted=S.transactions.slice().sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+  var run=S.initialBalance;
+  var pts=[run];
+  sorted.forEach(function(tx){
+    run += tx.type==='ingreso' ? tx.amount : -tx.amount;
+    pts.push(run);
+  });
+  // Down-sample to N points if too many
+  if(pts.length<=N) return pts;
+  var step=(pts.length-1)/(N-1);
+  var out=[];
+  for(var i=0;i<N;i++) out.push(pts[Math.round(i*step)]);
+  return out;
+}
+// Daily series of ingresos/egresos for last N days (for mini sparklines)
+function dailySeries(type,days){
+  days=days||7;
+  var n=new Date();
+  var series=[];
+  for(var i=days-1;i>=0;i--){
+    var d=new Date(n.getFullYear(),n.getMonth(),n.getDate()-i);
+    var key=d.toDateString();
+    var sum=0;
+    S.transactions.forEach(function(tx){
+      var td=new Date(tx.date);
+      if(tx.type===type && td.toDateString()===key) sum+=tx.amount;
+    });
+    series.push(sum);
+  }
+  // Pad with zeros if all flat so sparkline still renders visibly
+  if(series.every(function(v){return v===0;})) return [0,0.3,0.1,0.4,0.2,0.5,0.3];
+  return series;
+}
+// What fraction of this-month movements is this person responsible for?
+function personShare(p){
+  var n=new Date(),m=n.getMonth(),y=n.getFullYear();
+  var total=0,mine=0;
+  S.transactions.forEach(function(tx){
+    var d=new Date(tx.date);
+    if(d.getMonth()===m&&d.getFullYear()===y){
+      total++;
+      if(tx.person===p) mine++;
+    }
+  });
+  return total>0 ? mine/total : 0;
+}
+function MONTH_NAME(m){
+  var MS=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  return MS[m];
+}
+
+/* ══════════════════════════════════════════════════════
+   SVG HELPERS — sparkline + avatar ring
+══════════════════════════════════════════════════════ */
+function makeSparkSVG(data,color,w,h,fill){
+  if(!data||data.length<2) return '';
+  var min=Math.min.apply(null,data), max=Math.max.apply(null,data);
+  var range=max-min||1;
+  var pts=data.map(function(v,i){
+    var x=(i/(data.length-1))*w;
+    var y=h-((v-min)/range)*(h-6)-3;
+    return [x,y];
+  });
+  var path=pts.reduce(function(acc,p,i){
+    if(i===0) return 'M '+p[0]+' '+p[1];
+    var pp=pts[i-1];
+    var c1x=pp[0]+(p[0]-pp[0])/2, c1y=pp[1];
+    var c2x=pp[0]+(p[0]-pp[0])/2, c2y=p[1];
+    return acc+' C '+c1x+' '+c1y+','+c2x+' '+c2y+','+p[0]+' '+p[1];
+  },'');
+  var areaPath=path+' L '+w+' '+h+' L 0 '+h+' Z';
+  var last=pts[pts.length-1];
+  var gid='sg-'+Math.random().toString(36).slice(2,7);
+  var svg='<svg width="'+w+'" height="'+h+'" style="overflow:visible" viewBox="0 0 '+w+' '+h+'">'
+    +'<defs><linearGradient id="'+gid+'" x1="0" x2="0" y1="0" y2="1">'
+    +'<stop offset="0%" stop-color="'+color+'" stop-opacity="0.35"/>'
+    +'<stop offset="100%" stop-color="'+color+'" stop-opacity="0"/>'
+    +'</linearGradient></defs>';
+  if(fill!==false) svg+='<path d="'+areaPath+'" fill="url(#'+gid+')"/>';
+  svg+='<path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+    +'<circle cx="'+last[0]+'" cy="'+last[1]+'" r="6" fill="'+color+'" opacity="0.25"/>'
+    +'<circle cx="'+last[0]+'" cy="'+last[1]+'" r="3.5" fill="'+color+'"/>'
+    +'</svg>';
+  return svg;
+}
+function avatarRingSVG(letter,color,progress,size,trackColor,fillColor){
+  var r=size/2-2;
+  var c=2*Math.PI*r;
+  var off=c*(1-progress);
+  trackColor=trackColor||'rgba(255,255,255,0.3)';
+  fillColor=fillColor||'rgba(255,255,255,0.95)';
+  return '<div style="position:relative;width:'+size+'px;height:'+size+'px">'
+    +'<svg width="'+size+'" height="'+size+'" style="position:absolute;inset:0;transform:rotate(-90deg)">'
+    +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" stroke="'+trackColor+'" stroke-width="2" fill="none"/>'
+    +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" stroke="'+fillColor+'" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="'+c.toFixed(2)+'" stroke-dashoffset="'+off.toFixed(2)+'" style="transition:stroke-dashoffset 1.4s cubic-bezier(0.2,0.9,0.3,1)"/>'
+    +'</svg>'
+    +'<div style="position:absolute;inset:3px;border-radius:50%;background:'+color+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;box-shadow:inset 0 1px 0 rgba(255,255,255,0.35),0 1px 2px rgba(0,0,0,0.08)">'+letter+'</div>'
+    +'</div>';
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1662,8 +1810,6 @@ function render(){
   document.getElementById('pName2').textContent=n2;
   document.getElementById('avD').textContent=n1[0]||'D';
   document.getElementById('avT').textContent=n2[0]||'T';
-  document.getElementById('heroAvD').textContent=n1[0]||'D';
-  document.getElementById('heroAvT').textContent=n2[0]||'T';
 
   var bal = balance();
   var balEl = document.getElementById('balanceNum');
@@ -1678,8 +1824,61 @@ function render(){
   document.getElementById('heroMonth').textContent=MN[now.getMonth()]+' '+now.getFullYear();
 
   var ms=monthStats();
+  var pm=prevMonthStats();
   animateNum(document.getElementById('statIngresos'), ms.ing, 700);
   animateNum(document.getElementById('statEgresos'), ms.egr, 700);
+
+  // ── Balance trend vs mes anterior
+  var trendEl=document.getElementById('balanceTrend');
+  if(trendEl){
+    var thisNet=ms.ing-ms.egr, lastNet=pm.ing-pm.egr;
+    var pmM=now.getMonth()-1; if(pmM<0) pmM=11;
+    var pmLabel=MN[pmM].toLowerCase();
+    if(lastNet===0 && thisNet===0){
+      trendEl.innerHTML='Sin movimientos el mes pasado';
+    } else if(lastNet===0){
+      trendEl.innerHTML='<span class="delta pos">+'+fmtAmt(thisNet)+'</span> este mes';
+    } else {
+      var pct=((thisNet-lastNet)/Math.abs(lastNet))*100;
+      var cls=pct>=0?'pos':'neg';
+      var sign=pct>=0?'+':'';
+      trendEl.innerHTML='<span class="delta '+cls+'">'+sign+pct.toFixed(1)+'%</span> vs '+pmLabel;
+    }
+  }
+
+  // ── Balance sparkline
+  var sparkEl=document.getElementById('balanceSpark');
+  if(sparkEl) sparkEl.innerHTML=makeSparkSVG(balanceHistory(13),'#FFFFFF',120,38,true);
+
+  // ── Avatar rings (progreso = fracción de movimientos del mes por persona)
+  var avEl=document.getElementById('balanceAvatars');
+  if(avEl){
+    var sD=personShare('d'), sT=personShare('t');
+    if(sD===0 && sT===0){ sD=0.5; sT=0.5; }
+    avEl.innerHTML=avatarRingSVG(n1[0]||'D','#5B9BFF',sD,32)+avatarRingSVG(n2[0]||'T','#FF7AA8',sT,32);
+  }
+
+  // ── Stat card trends
+  var tIng=document.getElementById('trendIng');
+  var tEgr=document.getElementById('trendEgr');
+  if(tIng){
+    var ingMovs=S.transactions.filter(function(tx){var d=new Date(tx.date);return tx.type==='ingreso'&&d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();}).length;
+    var ingMovsPrev=S.transactions.filter(function(tx){var d=new Date(tx.date);var pmm=now.getMonth()-1,pmy=now.getFullYear();if(pmm<0){pmm=11;pmy--;}return tx.type==='ingreso'&&d.getMonth()===pmm&&d.getFullYear()===pmy;}).length;
+    var delta=ingMovs-ingMovsPrev;
+    tIng.textContent=(delta>=0?'+':'')+delta+' movs';
+  }
+  if(tEgr){
+    var egrMovs=S.transactions.filter(function(tx){var d=new Date(tx.date);return tx.type==='egreso'&&d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();}).length;
+    var egrMovsPrev=S.transactions.filter(function(tx){var d=new Date(tx.date);var pmm=now.getMonth()-1,pmy=now.getFullYear();if(pmm<0){pmm=11;pmy--;}return tx.type==='egreso'&&d.getMonth()===pmm&&d.getFullYear()===pmy;}).length;
+    var delta2=egrMovs-egrMovsPrev;
+    tEgr.textContent=(delta2>=0?'+':'')+delta2+' movs';
+  }
+
+  // ── Mini sparklines en stat cards
+  var sparkIng=document.getElementById('sparkIng');
+  var sparkEgr=document.getElementById('sparkEgr');
+  if(sparkIng) sparkIng.innerHTML=makeSparkSVG(dailySeries('ingreso',7),'#4CAF7A',82,24,true);
+  if(sparkEgr) sparkEgr.innerHTML=makeSparkSVG(dailySeries('egreso',7),'#E57373',82,24,true);
 
   renderList();
 }
