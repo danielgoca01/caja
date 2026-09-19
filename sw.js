@@ -1,5 +1,5 @@
 /* Caja Casa: guarda únicamente la interfaz; nunca intercepta la API de movimientos. */
-const SHELL_CACHE = 'caja-casa-shell-3.0-20260919';
+const SHELL_CACHE = 'caja-casa-shell-3.0-20260919-r2';
 const SHELL_FILES = ['./', './sync.js', './ui.js', './ui.css', './manifest.json'];
 const shellURLs = SHELL_FILES.map(file => new URL(file, self.registration.scope).href);
 self.addEventListener('install', event => {
