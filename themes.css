@@ -1,0 +1,56 @@
+/* Default paint before JS restores preferences. Components live in ui.css.
+ * Generated from resolveTheme("editorial"); the theme tests keep these aligned. */
+:root {
+  --bg: #F4F1E8;
+  --surface: #FAF8F2;
+  --surface-raised: #FFFFFF;
+  --ink: #272C24;
+  --ink-2: #535B4C;
+  --ink-3: #616859;
+  --border: #D6DACD;
+  --accent: #526C4C;
+  --accent-strong: #4A6245;
+  --accent-ink: #FFFFFF;
+  --tint: #EBECE3;
+  --pos: #41694F;
+  --pos-bg: #F0F1E9;
+  --neg: #984D49;
+  --neg-bg: #F5EFE9;
+  --danger-button: #9C4542;
+  --danger-ink: #FFFFFF;
+  --font: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ui-font: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-numeric: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --display-font: 'Petrona', Georgia, serif;
+  --display-weight: 500;
+  --display-style: normal;
+  --color-scheme: light;
+  --bg-grad: #F4F1E8;
+  --card: #FAF8F2;
+  --pill: #FFFFFF;
+  --accent-deep: #4A6245;
+  --accent-soft: #C4CBBD;
+  --accent-rgb: 82,108,76;
+  --shell: #EDEAE1;
+  --shell-line: #D6DACD;
+  --track: #EEEDE7;
+  --glass: #F4F1E8;
+  --glass-line: #D6DACD;
+  --shadow-card: none;
+  --hero-bg: #FAF8F2;
+  --hero-ink: #272C24;
+  --hero-ink-2: #535B4C;
+  --hero-line: #D6DACD;
+  --hero-glow: transparent;
+  --mint: #41694F;
+  --mint-soft: #F0F1E9;
+  --rose: #984D49;
+  --rose-soft: #F5EFE9;
+  --blue-av: #526C4C;
+  --pink-av: #4A6245;
+  --b1: #EBECE3;
+  --b2: #526C4C;
+  --b3: #4A6245;
+  --b4: #272C24;
+  color-scheme: light;
+}

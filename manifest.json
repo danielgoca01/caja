@@ -4,8 +4,8 @@
   "description": "Ingresos y gastos en efectivo de Daniel y Thalía",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#F7F5EF",
-  "theme_color": "#F7F5EF",
+  "background_color": "#F4F1E8",
+  "theme_color": "#F4F1E8",
   "icons": [
     {
       "src": "https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_0.jpg",
