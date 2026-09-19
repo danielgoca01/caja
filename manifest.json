@@ -1,11 +1,11 @@
 {
-  "name": "Caja Efectivo",
-  "short_name": "Caja Efectivo",
-  "description": "Control de gastos compartidos — diseño Claridad",
+  "name": "Caja Casa",
+  "short_name": "Caja Casa",
+  "description": "Ingresos y gastos en efectivo de Daniel y Thalía",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#FAF6EE",
-  "theme_color": "#B8841A",
+  "background_color": "#F7F5EF",
+  "theme_color": "#F7F5EF",
   "icons": [
     {
       "src": "https://raw.githubusercontent.com/danielgoca01/caja-icons/main/caja_icon_0.jpg",
@@ -19,5 +19,7 @@
       "type": "image/jpeg",
       "purpose": "any"
     }
-  ]
+  ],
+  "id": "./",
+  "lang": "es-CO"
 }
