@@ -61,7 +61,8 @@ function refreshJournal() {
       if (raw === null) return;
       try {
         var op = JSON.parse(raw);
-        if (!op || !op.id || LS.opPrefix + op.id !== key || !op.payload || ['add', 'addBatch', 'del', 'setConfig'].indexOf(op.op) < 0) throw new Error('invalid journal');
+        if (!op || !op.id || LS.opPrefix + op.id !== key || !op.payload || ['add', 'addBatch', 'edit', 'del', 'setConfig'].indexOf(op.op) < 0) throw new Error('invalid journal');
+        if (op.op === 'edit') validateEditPayload(op.payload.tx, op.payload.before);
         if (op.op === 'addBatch') {
           if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,79}$/.test(op.batchId) || !Array.isArray(op.payload.transactions) ||
               !op.payload.transactions.length || op.payload.transactions.length > 50 ||
@@ -72,15 +73,15 @@ function refreshJournal() {
       } catch (error) { _journalError = 'Hay un registro local dañado. Descarga una copia de seguridad.'; }
     });
   } catch (error) { throw storageFailure(error); }
-  // The archived parent records its dependent deletes before any child changes.
+  // The archived parent records its dependent edits/deletes before child changes.
   // On a crash between those writes this recovery runs before any network send.
-  var discardedDeletes = new Set();
+  var discardedDependents = new Set();
   records.forEach(function(op) {
     if (op.status === 'resolved' && op.resolution === 'discarded-local')
-      (op.dependentDeleteIds || []).forEach(function(id) { discardedDeletes.add(id); });
+      (op.dependentDeleteIds || []).concat(op.dependentOperationIds || []).forEach(function(id) { discardedDependents.add(id); });
     if (op.op === 'addBatch') {
       var discarded = readBatchDiscard(op.id);
-      (discarded.dependentDeleteIds || []).forEach(function(id) { discardedDeletes.add(id); });
+      (discarded.dependentDeleteIds || []).concat(discarded.dependentOperationIds || []).forEach(function(id) { discardedDependents.add(id); });
     }
   });
   records.forEach(function(op) {
@@ -88,14 +89,14 @@ function refreshJournal() {
       var conflict = records.some(function(other) { return other.op === 'addBatch' && other.batchId === op.batchId && other.id !== op.id; });
       op = hydrateBatch(op, conflict);
     }
-    if (discardedDeletes.has(op.id) && op.op === 'del' && op.status === 'pending' && !op.tries) {
-      op = Object.assign({}, op, { status: 'resolved', resolution: 'discarded-dependent-delete' });
+    if (discardedDependents.has(op.id) && (op.op === 'del' || op.op === 'edit') && operationUnsent(op)) {
+      op = Object.assign({}, op, { status: 'resolved', resolution: op.op === 'del' ? 'discarded-dependent-delete' : 'discarded-dependent-edit' });
       persistOperation(op);
     }
     // Resolved rejects remain in the journal/backup as an audit trail.
     if (op.status !== 'resolved') operations.push(op);
   });
-  operations.sort(function(a, b) { return a.ts - b.ts || a.id.localeCompare(b.id); });
+  operations.sort(compareOperations);
   // A row receipt can arrive from another tab before its storage event. Adopt
   // the snapshot it was confirmed against before excluding that row's overlay.
   var persisted = latestSnapshot();
@@ -111,6 +112,26 @@ function readOperation(id) {
 }
 function persistOperation(op) { lsSet(LS.opPrefix + op.id, op); }
 function paint() { if (typeof render === 'function') render(); setSync(); }
+function compareOperations(a, b) { return a.ts - b.ts || a.id.localeCompare(b.id); }
+function operationTransactionId(op) {
+  return op.op === 'add' || op.op === 'edit' ? op.payload.tx.id : op.op === 'del' ? op.payload.id : null;
+}
+function operationUnsent(op) {
+  return op.status === 'pending' && !op.tries && !op.attemptedAt && (!_inflightOp || _inflightOp.id !== op.id);
+}
+function assertTransactionWritable(id) {
+  var failed = S.outbox.some(function(op) {
+    return op.op === 'addBatch' ? op.rows.some(function(row) { return row.transactionId === id && row.status === 'failed'; }) :
+      op.status === 'failed' && operationTransactionId(op) === id;
+  });
+  if (failed) throw new Error('Este movimiento tiene un intento rechazado. Abre Ajustes y resuélvelo o descarta el intento local antes de editar o eliminar.');
+}
+function dependentOperationIds(op, transactionIds) {
+  return S.outbox.filter(function(item) {
+    return (item.op === 'edit' || item.op === 'del') && transactionIds.indexOf(operationTransactionId(item)) >= 0 &&
+      compareOperations(item, op) > 0 && operationUnsent(item);
+  }).map(function(item) { return item.id; });
+}
 
 /* The batch payload is immutable and written once. Progress uses independent
  * row keys, so a second tab confirming the same preview cannot reset an ACK.
@@ -125,7 +146,9 @@ function readBatchDiscard(id) {
   var value = readBatchValue(LS.batchDiscardPrefix + id, { indices: [], dependentDeleteIds: [] });
   if (!value || !Array.isArray(value.indices) || !Array.isArray(value.dependentDeleteIds) ||
       value.indices.some(function(index) { return !Number.isInteger(index) || index < 0 || index >= 50; }) ||
-      value.dependentDeleteIds.some(function(id) { return typeof id !== 'string'; }))
+      value.dependentDeleteIds.some(function(id) { return typeof id !== 'string'; }) ||
+      value.dependentOperationIds !== undefined && (!Array.isArray(value.dependentOperationIds) ||
+        value.dependentOperationIds.some(function(id) { return typeof id !== 'string'; })))
     throw storageFailure(new Error('El registro de descarte del lote está dañado.'));
   return value;
 }
@@ -190,6 +213,11 @@ function validateTransaction(tx) {
 function normalizedTransaction(tx) {
   return { id: tx.id, date: tx.date, type: tx.type, category: cleanLocalText(tx.category || ''),
     description: cleanLocalText(tx.description || ''), amount: tx.amount, person: tx.person };
+}
+function transactionsEqual(a, b) { return JSON.stringify(normalizedTransaction(a)) === JSON.stringify(normalizedTransaction(b)); }
+function validateEditPayload(tx, before) {
+  validateTransaction(tx); validateTransaction(before);
+  if (tx.id !== before.id) throw new Error('La edición debe conservar el identificador del movimiento.');
 }
 function validateSettings(settings) {
   if (!settings || typeof settings !== 'object' || Array.isArray(settings)) throw new Error('La configuración no es válida.');
@@ -260,8 +288,19 @@ function opAddTxBatch(transactions, batchId) {
 }
 function opDelTx(id) {
   if (typeof id !== 'string' || !id) throw new Error('No se encontró el movimiento.');
+  refreshJournal(); assertTransactionWritable(id);
   // Always journal deletes. An earlier timed-out add may already be on the server.
   return enqueue('del', { id: id });
+}
+function opEditTx(tx, before) {
+  validateEditPayload(tx, before);
+  tx = normalizedTransaction(tx); before = normalizedTransaction(before);
+  refreshJournal(); assertTransactionWritable(tx.id);
+  var current = effectiveTxs().find(function(item) { return item.id === tx.id; });
+  if (!current) throw new Error('Este movimiento ya no está disponible. Cierra la edición y revisa la lista actualizada.');
+  if (!transactionsEqual(current, before)) throw new Error('Este movimiento cambió mientras lo editabas. Cierra la edición y vuelve a abrirlo para revisar la versión actual.');
+  if (transactionsEqual(tx, before)) return null;
+  return enqueue('edit', { tx: tx, before: before });
 }
 function opSetConfig(settings) {
   validateSettings(settings);
@@ -280,23 +319,19 @@ function discardFailedOperation(id) {
       return row.status === 'failed' || row.status === 'pending' && !row.attemptedAt && !row.tries;
     }).map(function(row) { return row.index; });
     var discardedTxIds = indices.map(function(index) { return op.payload.transactions[index].id; });
-    var dependentBatchDeletes = S.outbox.filter(function(item) {
-      return item.op === 'del' && discardedTxIds.indexOf(item.payload.id) >= 0 && item.ts > op.ts &&
-        item.status === 'pending' && !item.tries && (!_inflightOp || _inflightOp.id !== item.id);
-    }).map(function(item) { return item.id; });
+    var dependentBatchOperations = dependentOperationIds(op, discardedTxIds);
     lsSet(LS.batchDiscardPrefix + id, { resolution: 'discarded-local', resolvedAt: Date.now(),
       indices: Array.from(new Set((previous.indices || []).concat(indices))),
-      dependentDeleteIds: Array.from(new Set((previous.dependentDeleteIds || []).concat(dependentBatchDeletes))) });
+      dependentDeleteIds: previous.dependentDeleteIds || [],
+      dependentOperationIds: Array.from(new Set((previous.dependentOperationIds || []).concat(dependentBatchOperations))) });
     refreshJournal(); paint();
     return true;
   }
   if (!op || op.status !== 'failed') throw new Error('Solo se pueden descartar intentos rechazados. Los pendientes deben terminar de sincronizar.');
-  var dependentIds = op.op === 'add' ? S.outbox.filter(function(item) {
-    return item.op === 'del' && item.payload.id === op.payload.tx.id && item.ts > op.ts &&
-      item.status === 'pending' && !item.tries && (!_inflightOp || _inflightOp.id !== item.id);
-  }).map(function(item) { return item.id; }) : [];
+  var txId = operationTransactionId(op);
+  var dependentIds = txId ? dependentOperationIds(op, [txId]) : [];
   persistOperation(Object.assign({}, op, { status: 'resolved', resolution: 'discarded-local',
-    resolvedAt: Date.now(), dependentDeleteIds: dependentIds }));
+    resolvedAt: Date.now(), dependentOperationIds: dependentIds }));
   refreshJournal(); paint();
   return true;
 }
@@ -305,7 +340,7 @@ function effectiveTxs() {
   var byId = new Map();
   S.server.transactions.forEach(function(tx) { byId.set(tx.id, tx); });
   S.outbox.forEach(function(op) {
-    if (op.op === 'add') byId.set(op.payload.tx.id, op.payload.tx);
+    if (op.op === 'add' || op.op === 'edit') byId.set(op.payload.tx.id, op.payload.tx);
     if (op.op === 'addBatch') op.rows.forEach(function(row) {
       if (row.status !== 'resolved') {
         var tx = op.payload.transactions[row.index]; byId.set(tx.id, tx);
@@ -326,7 +361,7 @@ function effectiveConfig() {
 }
 function isPending(id) {
   return S.outbox.some(function(op) {
-    return op.op === 'add' && op.payload.tx.id === id || op.op === 'addBatch' &&
+    return (op.op === 'add' || op.op === 'edit') && op.payload.tx.id === id || op.op === 'addBatch' &&
       op.rows.some(function(row) { return row.transactionId === id && row.status !== 'resolved'; });
   });
 }
@@ -400,6 +435,7 @@ function trimSnapshots() {
 
 function snapshotReflects(op, snapshot) {
   if (op.op === 'add') return snapshot.transactions.some(function(tx) { return tx.id === op.payload.tx.id; });
+  if (op.op === 'edit') return snapshot.transactions.some(function(tx) { return tx.id === op.payload.tx.id && transactionsEqual(tx, op.payload.tx); });
   if (op.op === 'del') return !snapshot.transactions.some(function(tx) { return tx.id === op.payload.id; });
   return Object.keys(op.payload.settings).every(function(key) {
     var expected = key === 'initialBalance' ? op.payload.settings[key] : cleanLocalText(op.payload.settings[key]);
@@ -512,28 +548,38 @@ function scheduleDrain(delay) {
   clearTimeout(_drainTimer);
   _drainTimer = setTimeout(function() { _drainTimer = null; drainOutbox(); }, Math.max(250, delay || 1000));
 }
+function transactionBlocked(op, id) {
+  return S.outbox.some(function(earlier) {
+    if (compareOperations(earlier, op) >= 0 || earlier.status === 'acknowledged') return false;
+    if (earlier.op === 'addBatch') return earlier.rows.some(function(row) {
+      return row.transactionId === id && row.status !== 'acknowledged' && row.status !== 'resolved';
+    });
+    return operationTransactionId(earlier) === id;
+  });
+}
+function nextBatchRow(op) {
+  return op.rows.find(function(row) {
+    return row.status === 'pending' && (row.nextAttemptAt || 0) <= Date.now() && !transactionBlocked(op, row.transactionId);
+  });
+}
 function nextOperation() {
   refreshJournal();
-  var pending = S.outbox.filter(function(op) {
-    return op.op === 'addBatch' ? op.rows.some(function(row) { return row.status === 'pending' && (row.nextAttemptAt || 0) <= Date.now(); }) :
-      op.status !== 'failed' && op.status !== 'acknowledged';
-  });
-  return pending.find(function(op) {
-    if ((op.nextAttemptAt || 0) > Date.now()) return false;
-    // Never send a delete before a preceding add, or reorder configuration.
+  return S.outbox.find(function(op) {
+    if (op.op === 'addBatch') return !!nextBatchRow(op);
+    if (op.status !== 'pending' || (op.nextAttemptAt || 0) > Date.now()) return false;
+    var id = operationTransactionId(op);
+    // Mutations for one ID stay ordered, including failed ancestors. A failed
+    // batch row blocks its own descendants but never blocks unrelated siblings.
+    if (id) return !transactionBlocked(op, id);
     return !S.outbox.some(function(earlier) {
-      if (earlier.id === op.id || earlier.ts >= op.ts || earlier.status === 'acknowledged') return false;
-      return op.op === 'del' && earlier.op === 'add' && earlier.payload.tx.id === op.payload.id ||
-        op.op === 'del' && earlier.op === 'addBatch' && earlier.rows.some(function(row) {
-          return row.transactionId === op.payload.id && row.status !== 'acknowledged' && row.status !== 'resolved';
-        }) ||
+      return compareOperations(earlier, op) < 0 && earlier.status !== 'acknowledged' &&
         op.op === 'setConfig' && earlier.op === 'setConfig' && earlier.status !== 'failed';
     });
   });
 }
 async function drainBatchRow(op) {
   var current = hydrateBatch(readOperation(op.id), op.batchConflict);
-  var row = current.rows.find(function(item) { return item.status === 'pending' && (item.nextAttemptAt || 0) <= Date.now(); });
+  var row = nextBatchRow(current);
   if (!row) return false;
   // Persist attempted-before-send: an ambiguous timeout must be reconciled with
   // the same receipt, not treated as an unsent row when discarding other failures.
@@ -562,6 +608,7 @@ function drainOutbox() {
   try { refreshJournal(); } catch (error) { setSync(); return Promise.resolve(false); }
   if (typeof navigator !== 'undefined' && navigator.onLine === false || !S.outbox.length) { setSync(); return Promise.resolve(false); }
   _draining = true;
+  var refreshAfterConflict = false;
   _drainPromise = Promise.resolve().then(function() {
     return withSyncLock(async function() {
       // One operation per lease/lock keeps fallback lease shorter than its TTL.
@@ -569,7 +616,11 @@ function drainOutbox() {
       if (!op) return false;
       if (op.op === 'addBatch') return drainBatchRow(op);
       op = readOperation(op.id);
-      if (!op || op.status === 'acknowledged' || op.status === 'failed') return false;
+      if (!op || op.status !== 'pending') return false;
+      // Durable before send so another tab cannot discard an ambiguous request
+      // as "never sent", including a crash before its ACK is written locally.
+      op = Object.assign({}, op, { attemptedAt: Date.now(), tries: (op.tries || 0) + 1 });
+      persistOperation(op);
       _inflightOp = op;
       try {
         var response = await api(op.op, op.payload, op.id);
@@ -582,7 +633,8 @@ function drainOutbox() {
       } catch (error) {
         if (error.code === 'LOCAL_STORAGE') throw error;
         if (error.retryable !== false) networkFailed(error);
-        var failure = Object.assign({}, op, { tries: (op.tries || 0) + 1, error: error.message,
+        if (op.op === 'edit' && error.retryable === false) refreshAfterConflict = true;
+        var failure = Object.assign({}, op, { error: error.message,
           code: error.code || 'NETWORK', retryable: error.retryable !== false,
           status: error.retryable === false ? 'failed' : 'pending' });
         failure.nextAttemptAt = failure.status === 'failed' ? 0 : Date.now() + Math.min(30000, 1000 * Math.pow(2, Math.min(failure.tries, 5)));
@@ -595,7 +647,7 @@ function drainOutbox() {
     try { refreshJournal(); } catch (error) { setSync(); return; }
     paint();
     if (_storageError) return;
-    if (S.outbox.some(hasAcknowledgement)) {
+    if (refreshAfterConflict || S.outbox.some(hasAcknowledgement)) {
       fetchAll().catch(function() {}).finally(function() { if (S.outbox.some(hasAcknowledgement)) scheduleDrain(5000); });
     }
     var next = nextOperation();
@@ -658,7 +710,8 @@ function migrateLegacyOutbox() {
   var legacy = JSON.parse(raw);
   if (!Array.isArray(legacy)) throw new Error('La cola anterior no tiene un formato válido.');
   legacy.forEach(function(old, index) {
-    if (!old || ['add', 'del', 'setConfig'].indexOf(old.op) < 0 || !old.payload) throw new Error('Hay un movimiento anterior que necesita revisión.');
+    if (!old || ['add', 'edit', 'del', 'setConfig'].indexOf(old.op) < 0 || !old.payload) throw new Error('Hay un movimiento anterior que necesita revisión.');
+    if (old.op === 'edit') validateEditPayload(old.payload.tx, old.payload.before);
     var id = 'legacy:' + migrationHash(JSON.stringify(old)) + ':' + index;
     if (!readOperation(id)) persistOperation({ id: id, op: old.op, payload: old.payload,
       ts: Number(old.ts) || Date.now() + index, status: 'pending', tries: Number(old.tries) || 0, nextAttemptAt: 0 });

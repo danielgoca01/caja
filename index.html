@@ -101,7 +101,7 @@
 
     <div class="step" id="step1">
       <div class="f-label" id="catLabel">Categoría</div>
-      <div class="cat-row" id="catRow"></div>
+      <div class="cat-row" id="catRow"></div><p id="categoryPreserved" class="form-help" hidden></p>
       <div class="keypad">
         <button class="key" onclick="kp('1')">1</button><button class="key" onclick="kp('2')">2</button><button class="key" onclick="kp('3')">3</button>
         <button class="key" onclick="kp('4')">4</button><button class="key" onclick="kp('5')">5</button><button class="key" onclick="kp('6')">6</button>
@@ -115,7 +115,7 @@
       <div class="form-summary"><button id="formBack" class="back-btn" onclick="goStep1()">← Volver</button><span id="chipZone"></span></div>
       <div id="descZone">
         <label class="f-label" for="descInput">Descripción <span class="opt">(opcional)</span></label>
-        <input class="desc-input" id="descInput" placeholder="¿Para qué fue?" maxlength="80" autocomplete="off">
+        <input class="desc-input" id="descInput" placeholder="¿Para qué fue?" maxlength="500" autocomplete="off">
       </div>
       <label class="f-label" for="dateInput">Fecha</label><input class="desc-input date-input" id="dateInput" type="date" min="1900-01-01" required>
       <div class="f-label" id="personLabel">¿Quién registra?</div>
@@ -123,7 +123,7 @@
         <button class="person-btn sel-d" id="pbD" onclick="setPerson('d')"><span class="p-av" style="background:var(--blue-av)">D</span><span id="pbDName">Daniel</span></button>
         <button class="person-btn" id="pbT" onclick="setPerson('t')"><span class="p-av" style="background:var(--pink-av)">T</span><span id="pbTName">Thalía</span></button>
       </div>
-      <p class="form-error" id="formError" role="alert"></p><button class="btn-primary" id="saveTxBtn" onclick="saveTx()">Guardar movimiento <span class="arr" aria-hidden="true">✓</span></button><p class="form-help">Se guarda aquí al instante y se comparte al sincronizar.</p>
+      <p class="form-error" id="formError" role="alert"></p><button class="btn-primary" id="saveTxBtn" onclick="saveTx()">Guardar movimiento <span class="arr" aria-hidden="true">✓</span></button><p class="form-help">Se guarda aquí al instante y se comparte al sincronizar.</p><button id="editDeleteBtn" class="edit-delete" onclick="deleteEditingTx()" hidden>Eliminar movimiento</button>
     </div>
   </section>
 
@@ -157,7 +157,7 @@
     <div class="settings-save"><p class="form-help">El saldo inicial es el efectivo que había antes del primer movimiento.</p><p class="form-error" id="settingsError" role="alert"></p><button class="btn-primary" onclick="saveSettings()">Guardar ajustes <span class="arr" aria-hidden="true">✓</span></button></div>
     <section class="failed-panel" id="failedPanel" hidden aria-labelledby="failedTitle"><h3 id="failedTitle">Intentos rechazados</h3><p>Quita este intento del dispositivo. No elimina movimientos de la hoja.</p><div id="failedOperations"></div><p class="form-error" id="failedActionError" role="alert"></p></section>
     <div class="backup-box"><h3>Tus datos, a mano</h3><p id="syncIssue" class="form-error" role="status" hidden></p><p id="dataNote" hidden></p><p>Descarga una copia con movimientos y registros pendientes de este dispositivo.</p><button class="backup-btn" id="backupDownloadBtn" onclick="exportBackup()">Descargar copia de seguridad ↓</button><button class="backup-btn" onclick="retrySync()">Reintentar sincronización ↻</button></div>
-    <p class="app-version">Caja Casa · 3.2.1</p>
+    <p class="app-version">Caja Casa · 3.3</p>
   </section>
 
   <!-- Modal: apariencia -->

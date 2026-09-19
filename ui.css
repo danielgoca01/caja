@@ -691,8 +691,8 @@ header {
 }
 
 .tx-menu:hover {
-  color: var(--neg);
-  background: var(--neg-bg)
+  color: var(--accent-strong);
+  background: var(--surface)
 }
 
 .tx-del {
@@ -855,6 +855,7 @@ header {
 }
 
 .modal.open {
+  transition: transform .2s ease;
   visibility: visible;
   transform: translate(-50%,0)
 }
@@ -1843,3 +1844,8 @@ header {
   font-weight: 400;
   letter-spacing: .08em
 }
+
+/* Editing stays explicit and within the existing movement form. */
+.tx-menu { font-size: 12px; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.edit-delete { display: block; min-height: 44px; margin: 16px auto 0; color: var(--neg); font-size: 14px; }
+.edit-delete[hidden] { display: none; }
