@@ -321,3 +321,9 @@
   .voice-row-summary-amount > span { margin-top: 0; }
   .voice-choice { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Make the field focusable during the original tap, before the sheet slides in. */
+#voiceModal.open { transition: transform .2s ease; }
+@media (prefers-reduced-motion: reduce) {
+  #voiceModal.open { transition: none; }
+}

@@ -79,7 +79,7 @@
     <div id="txList"></div>
   </main>
 
-  <nav class="quick-actions" id="quickActions" aria-label="Registrar efectivo"><button class="quick-income" onclick="openSat('ingreso')"><span aria-hidden="true">＋</span> Ingreso</button><button class="quick-expense" onclick="openSat('egreso')"><span aria-hidden="true">−</span> Gasto</button><button class="voice-launch" onclick="voiceOpen()" aria-label="Hablar con Caja" aria-haspopup="dialog" title="Hablar con Caja"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="8" y="3" width="8" height="12" rx="4"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3M9 22h6"/></svg></button></nav>
+  <nav class="quick-actions" id="quickActions" aria-label="Registrar efectivo"><button class="quick-income" onclick="openSat('ingreso')"><span aria-hidden="true">＋</span> Ingreso</button><button class="quick-expense" onclick="openSat('egreso')"><span aria-hidden="true">−</span> Gasto</button><button class="voice-launch" onclick="voiceOpen(true)" aria-label="Hablar con Caja" aria-haspopup="dialog" title="Hablar con Caja"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="8" y="3" width="8" height="12" rx="4"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3M9 22h6"/></svg></button></nav>
 
   <div id="overlay" onclick="closeAll()"></div>
 
@@ -157,7 +157,7 @@
     <div class="settings-save"><p class="form-help">El saldo inicial es el efectivo que había antes del primer movimiento.</p><p class="form-error" id="settingsError" role="alert"></p><button class="btn-primary" onclick="saveSettings()">Guardar ajustes <span class="arr" aria-hidden="true">✓</span></button></div>
     <section class="failed-panel" id="failedPanel" hidden aria-labelledby="failedTitle"><h3 id="failedTitle">Intentos rechazados</h3><p>Quita este intento del dispositivo. No elimina movimientos de la hoja.</p><div id="failedOperations"></div><p class="form-error" id="failedActionError" role="alert"></p></section>
     <div class="backup-box"><h3>Tus datos, a mano</h3><p id="syncIssue" class="form-error" role="status" hidden></p><p id="dataNote" hidden></p><p>Descarga una copia con movimientos y registros pendientes de este dispositivo.</p><button class="backup-btn" id="backupDownloadBtn" onclick="exportBackup()">Descargar copia de seguridad ↓</button><button class="backup-btn" onclick="retrySync()">Reintentar sincronización ↻</button></div>
-    <p class="app-version">Caja Casa · 3.2</p>
+    <p class="app-version">Caja Casa · 3.2.1</p>
   </section>
 
   <!-- Modal: apariencia -->
@@ -206,7 +206,7 @@
       <p class="voice-intro">Dicta o escribe. Revisa los movimientos antes de guardarlos.</p>
       <label class="voice-text-label" for="voiceText">¿Qué pasó con el efectivo?</label>
       <textarea id="voiceText" maxlength="2000" rows="4" placeholder="Saqué un millón de la caja. Gasté 150 mil en mercado y 40 mil en transporte." aria-describedby="voiceMicStatus voiceCharacterCount"></textarea>
-      <div class="voice-dictation"><button id="voiceMic" class="voice-mic" onclick="voiceToggleMic()" aria-pressed="false" hidden>Usar micrófono</button><span id="voiceCharacterCount">0 / 2000</span></div>
+      <div class="voice-dictation"><button id="voiceMic" class="voice-mic" onclick="voiceToggleMic()" aria-pressed="false" hidden>Iniciar dictado</button><button id="voiceKeyboard" class="voice-text-button" onclick="voiceUseKeyboard()">Usar teclado</button><span id="voiceCharacterCount">0 / 2000</span></div>
       <p class="voice-hint" id="voiceMicStatus" aria-live="polite">En iPhone, toca el texto y usa el micrófono del teclado. También puedes escribir.</p>
       <div class="voice-grid voice-context"><label for="voicePerson">Persona<select id="voicePerson"><option id="voicePersonD" value="d">Daniel</option><option id="voicePersonT" value="t">Thalía</option></select></label><label for="voiceDate">Fecha<input id="voiceDate" type="date" min="1900-01-01" required></label></div>
       <button id="voicePrepare" class="btn-primary" onclick="voicePrepare()">Preparar movimientos</button>

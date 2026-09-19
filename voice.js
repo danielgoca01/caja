@@ -356,10 +356,9 @@ function voiceConfirm() {
   }
 }
 function voiceSpeechConstructor() { return window.SpeechRecognition || window.webkitSpeechRecognition; }
-function voiceStandalone() {
-  return navigator.standalone === true || !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
-}
-function voiceCanListen() { return !!voiceSpeechConstructor() && !voiceStandalone(); }
+// Installed Safari apps may expose recognition. Try the capability and handle
+// runtime failure; standalone mode alone is not evidence of missing support.
+function voiceCanListen() { return !!voiceSpeechConstructor(); }
 function voiceClearSpeechTimers() {
   if (VoiceRuntime.noSpeechTimer) clearTimeout(VoiceRuntime.noSpeechTimer);
   if (VoiceRuntime.speechTimer) clearTimeout(VoiceRuntime.speechTimer);
@@ -368,9 +367,9 @@ function voiceClearSpeechTimers() {
 function voiceStopListening(announce) {
   var recognition = VoiceRuntime.recognition;
   VoiceRuntime.recognition = null; VoiceRuntime.listening = false; voiceClearSpeechTimers();
-  if (recognition) { recognition.onresult = recognition.onerror = recognition.onend = null; try { recognition.abort(); } catch (error) {} }
+  if (recognition) { recognition.onstart = recognition.onresult = recognition.onerror = recognition.onend = null; try { recognition.abort(); } catch (error) {} }
   if (announce) voiceElement('voiceMicStatus').textContent = 'Dictado detenido. Puedes corregir el texto antes de prepararlo.';
-  if (voiceElement('voiceMic')) { voiceElement('voiceMic').textContent = 'Usar micrófono'; voiceElement('voiceMic').setAttribute('aria-pressed', 'false'); }
+  if (voiceElement('voiceMic')) { voiceElement('voiceMic').textContent = 'Iniciar dictado'; voiceElement('voiceMic').setAttribute('aria-pressed', 'false'); }
 }
 function voiceUseKeyboard(message) {
   voiceStopListening(false);
@@ -379,14 +378,25 @@ function voiceUseKeyboard(message) {
 }
 function voiceToggleMic() {
   if (VoiceRuntime.listening) { voiceStopListening(true); return; }
-  if (!voiceCanListen()) { voiceUseKeyboard(); return; }
   if (VoiceRuntime.busy || VoiceRuntime.saving) return;
+  if (!voiceCanListen()) { voiceUseKeyboard(); return; }
   var Recognition = voiceSpeechConstructor(), recognition;
   try { recognition = new Recognition(); } catch (error) { voiceUseKeyboard(); return; }
   voiceStopListening(false);
   VoiceRuntime.recognition = recognition; VoiceRuntime.listening = true;
   VoiceRuntime.speechBase = VoiceDraft.text.trim(); VoiceRuntime.hasSpeech = false;
   recognition.lang = 'es-CO'; recognition.continuous = true; recognition.interimResults = true; recognition.maxAlternatives = 1;
+  recognition.onstart = function() {
+    if (VoiceRuntime.recognition !== recognition) return;
+    voiceClearSpeechTimers();
+    voiceElement('voiceMicStatus').textContent = 'Escuchando… toca Detener cuando termines.';
+    VoiceRuntime.noSpeechTimer = setTimeout(function() {
+      if (VoiceRuntime.recognition === recognition && !VoiceRuntime.hasSpeech) voiceUseKeyboard('No llegó dictado. Toca Usar teclado y después su micrófono.');
+    }, 10000);
+    VoiceRuntime.speechTimer = setTimeout(function() {
+      if (VoiceRuntime.recognition === recognition) voiceStopListening(true);
+    }, 45000);
+  };
   recognition.onresult = function(event) {
     if (VoiceRuntime.recognition !== recognition) return;
     var parts = [];
@@ -399,9 +409,15 @@ function voiceToggleMic() {
     voiceUpdateText((VoiceRuntime.speechBase ? VoiceRuntime.speechBase + ' ' : '') + transcript, true);
     voiceElement('voiceMicStatus').textContent = 'Escuchando… toca Detener cuando termines.';
   };
-  recognition.onerror = function() {
+  recognition.onerror = function(event) {
     if (VoiceRuntime.recognition !== recognition) return;
-    voiceUseKeyboard('El micrófono del navegador no está disponible. Usa el micrófono del teclado del iPhone.');
+    var reason = event && event.error;
+    var message = reason === 'not-allowed' || reason === 'service-not-allowed'
+      ? 'Safari no permitió el dictado. Puedes revisar el permiso de micrófono o usar el micrófono del teclado.'
+      : reason === 'audio-capture'
+        ? 'No se pudo acceder al micrófono. Comprueba que otra app no lo esté usando o usa el teclado.'
+        : 'No llegó dictado desde Safari. Toca Usar teclado y después su micrófono.';
+    voiceUseKeyboard(message);
   };
   recognition.onend = function() {
     if (VoiceRuntime.recognition !== recognition) return;
@@ -410,13 +426,11 @@ function voiceToggleMic() {
     voiceElement('voiceMicStatus').textContent = heard ? 'Dictado listo. Revisa el texto antes de prepararlo.' : 'No llegó dictado. Puedes usar el micrófono del teclado del iPhone.';
   };
   voiceElement('voiceMic').textContent = 'Detener'; voiceElement('voiceMic').setAttribute('aria-pressed', 'true');
-  voiceElement('voiceMicStatus').textContent = 'Escuchando… puedes dictar hasta 45 segundos.';
-  VoiceRuntime.noSpeechTimer = setTimeout(function() {
-    if (VoiceRuntime.recognition === recognition && !VoiceRuntime.hasSpeech) voiceUseKeyboard('No llegó dictado. Usa el micrófono del teclado del iPhone.');
-  }, 10000);
+  voiceElement('voiceMicStatus').textContent = 'Iniciando micrófono… acepta el permiso si Safari lo solicita.';
+  // A permission prompt is not silence. Start the dictation limits in onstart.
   VoiceRuntime.speechTimer = setTimeout(function() {
-    if (VoiceRuntime.recognition === recognition) voiceStopListening(true);
-  }, 45000);
+    if (VoiceRuntime.recognition === recognition) voiceUseKeyboard('Safari no inició el micrófono. Toca Iniciar dictado para reintentar o Usar teclado.');
+  }, 30000);
   try { recognition.start(); } catch (error) { voiceUseKeyboard(); }
 }
 function voiceUpdateStatus() {
@@ -430,10 +444,11 @@ function voiceUpdateStatus() {
   prepare.disabled = !configured || !VoiceDraft.text.trim() || VoiceRuntime.busy || VoiceRuntime.saving;
   voiceElement('voiceMic').hidden = !voiceCanListen();
   voiceElement('voiceMic').disabled = VoiceRuntime.busy || VoiceRuntime.saving;
+  voiceElement('voiceKeyboard').disabled = VoiceRuntime.busy || VoiceRuntime.saving;
   voiceUpdateTotals();
 }
 function voiceFocusText() { voiceElement('voiceText').focus({ preventScroll: false }); }
-function voiceOpen() {
+function voiceOpen(startDictation) {
   if (!VoiceDraft.text.trim() && !VoiceDraft.rows.length) VoiceDraft.date = voiceToday();
   voiceElement('voiceText').value = VoiceDraft.text;
   voiceElement('voicePersonD').textContent = voiceName('d'); voiceElement('voicePersonT').textContent = voiceName('t');
@@ -443,6 +458,8 @@ function voiceOpen() {
   voiceElement('voiceAccessError').textContent = '';
   voiceElement('voiceMicStatus').textContent = 'En iPhone, toca el texto y usa el micrófono del teclado. También puedes escribir.';
   voiceRenderPreview(); voiceUpdateStatus(); open_('voiceModal');
+  // Keep start() in the original tap; a delayed call can lose Safari's gesture.
+  if (startDictation) voiceToggleMic();
 }
 function voiceOnClose() { voiceStopListening(false); voiceAbortRequest(); }
 function voiceInit() {
