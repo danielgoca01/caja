@@ -6,7 +6,7 @@
   <title>Caja Casa</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Caja Casa">
   <meta name="theme-color" content="#F4F1E8">
   <link rel="manifest" href="manifest.json">
@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <div class="list-tools"><label class="search-field"><span class="sr-only">Buscar movimientos</span><svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m12.5 12.5 4 4"/></svg><input id="txSearch" type="search" placeholder="Buscar movimientos" oninput="searchTransactions(this.value)"></label><label class="person-filter"><span class="sr-only">Filtrar por persona</span><select id="personFilter" onchange="setPersonFilter(this.value)"><option value="all">Todas</option><option id="personDFilter" value="d">Daniel</option><option id="personTFilter" value="t">Thalía</option></select></label></div>
+    <div class="list-tools"><label class="search-field"><span class="sr-only">Buscar movimientos</span><svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m12.5 12.5 4 4"/></svg><input id="txSearch" type="search" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Buscar movimientos" oninput="searchTransactions(this.value)"></label><label class="person-filter"><span class="sr-only">Filtrar por persona</span><select id="personFilter" onchange="setPersonFilter(this.value)"><option value="all">Todas</option><option id="personDFilter" value="d">Daniel</option><option id="personTFilter" value="t">Thalía</option></select></label></div>
     <div id="resultCount" class="result-count" aria-live="polite"></div>
     <div id="txList"></div>
   </main>
